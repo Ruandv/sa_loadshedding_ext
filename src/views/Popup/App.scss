@@ -1,0 +1,44 @@
+.App {
+  box-sizing: border-box;
+  text-align: center;
+  padding: 10px;
+}
+
+.overlay {
+  display: block;
+  position: fixed; /* Sit on top of the page content */
+  color: black;
+  background-image: url("../../images/loading.gif");
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  background-size: 100px 100px;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  background-color: rgba(
+    229,
+    242,
+    255,
+    0.85
+  ); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.hideOverlay {
+  display: none;
+}
+.overlay > div {
+  padding-top: 10%;
+}
+
+#DARKMODE {
+  background-color: #343a40;
+  .btn-primary {
+    background-color: #6c757d;
+  }
+}
+
+#LIGHTMODE {
+  .card {
+    background-color: #f8f9fa;
+  }
+}

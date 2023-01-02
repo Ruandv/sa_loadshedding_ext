@@ -1,0 +1,58 @@
+.DARKMODE-circle {
+  animation-name: example;
+  animation-duration: 0.5s;
+  right:0;
+  left:unset;
+}
+
+.LIGHTMODE-circle {
+  animation-name: exampleReverse;
+  animation-duration: 0.5s;
+  left:0;
+  right:unset;
+}
+
+.outer {
+  width: 80px;
+  border: 1px solid #6C757D;
+  height: 32px;
+  position: relative;
+  border-radius: 30px;
+}
+
+.circle {
+  background: #7E7E7E;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+}
+
+@keyframes exampleReverse {
+  0% {
+    left: unset;
+    right: 0px;
+  }
+  25% {
+    left: 50%;
+    right: unset;
+  }
+  100% {
+    left: 0px;
+    right: unset;
+  }
+}
+
+@keyframes example {
+  0% {
+    left: 0px;
+    right: unset;
+  }
+  25% {
+    left: unset;
+    right: 50%;
+  }
+  100% {
+    right: 0px;
+  }
+}

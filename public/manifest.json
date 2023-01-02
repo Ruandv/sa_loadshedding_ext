@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Eskom Loadshedding",
+  "version": "2.0.0",
+  "description": "Loadshedding extension for COJ/Tshwane",
+  "background": {
+    "service_worker": "static/js/background.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["static/js/content.js"],
+      "matches": ["http://*.example.com/*", "https://*.example.com/*"]
+    }
+  ],
+  "icons": {
+    "16": "images/get_started16.png",
+    "19": "images/get_started19.png",
+    "32": "images/get_started32.png",
+    "48": "images/get_started48.png",
+    "128": "images/get_started128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/get_started16.png",
+      "19": "images/get_started19.png",
+      "32": "images/get_started32.png",
+      "48": "images/get_started48.png",
+      "128": "images/get_started128.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "COJ Loadshedding"
+  },
+  "permissions": ["storage", "alarms","tabs","activeTab"],
+  "host_permissions": ["https://loadshedding.eskom.co.za/*","https://eskom-calendar-api.azurewebsites.net/*"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
+}
