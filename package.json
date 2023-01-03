@@ -1,6 +1,6 @@
 {
-  "name": "my-nintex-promapp-ext",
-  "version": "0.1.0",
+  "name": "loadshedding-extension",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
@@ -30,6 +30,7 @@
     "start": "react-scripts start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
+    "package": "yarn build && zip-build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -53,5 +54,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "zip-build": "^1.8.0"
   }
 }

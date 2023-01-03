@@ -38,9 +38,6 @@ function NewSuburb({
       }
     }, 1000);
   }, [loading, message]);
-  useEffect(() => {
-    
-  }, []);
 
   var removeSuburb = (x: Suburb) => {
     var c = [...suburbList!];
@@ -55,13 +52,18 @@ function NewSuburb({
   };
 
   var addSuburb = () => {
+    var mun = municipalitySelection.current;
+    var munSel = mun.selectedIndex;
+    var munOpt = mun.options[munSel];
+    var munValue = munOpt.value;
+
     var c = [...suburbList!];
     var e = selection.current;
     var sel = e.selectedIndex;
     var opt = e.options[sel];
     var curValue = opt.value;
     var curText = opt.text;
-    c.push({ blockId: curValue, subName: curText });
+    c.push({ blockId: curValue, subName: curText, municipalityId: munValue });
     storageService.saveData(StorageKeys.suburbList, c);
     loggingService.LogToServer(MessageTypes.SUBURBADDED, {
       SuburbName: curText,
@@ -69,10 +71,9 @@ function NewSuburb({
     onSuburbListChanged(c);
   };
 
-  const updateSuburbs = async(e:any)=>{
-      
+  const updateSuburbs = async (e: any) => {
     var curValue = e.target.value;
-  //  var curText = opt.text;
+    //  var curText = opt.text;
     setMessage("Please wait");
     setLoading(true);
     doneYet = false;
@@ -88,7 +89,7 @@ function NewSuburb({
       }
     };
     getSuburbs();
-  }
+  };
 
   return (
     <div>

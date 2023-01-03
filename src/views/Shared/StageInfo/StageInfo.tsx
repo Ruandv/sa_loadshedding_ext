@@ -38,7 +38,8 @@ function StageInfo({
         var res = await ruanService.getSchedule(
           suburb.blockId,
           stage,
-          !days ? 5 : days
+          !days ? 5 : days,
+          suburb.municipalityId
         );
         setScheduleData(res);
         doneYet = true;
@@ -75,21 +76,10 @@ function StageInfo({
       <div>
         <Row xs={2} md={2} className="g-4">
           {scheduleData?.map((x, idx, arr) => {
-            if (idx > 0 && arr[idx - 1].dayOfMonth !== x.dayOfMonth) {
-              return (
-                <Col>
-                  <Card>
-                    <Card.Header>
-                      {x.dayOfMonth.toString().substring(0, 10)}
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Text>{getInfo(arr, idx, stage)}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              );
-            }
-            else if(idx===0){
+            if (
+              idx === 0 ||
+              (idx > 0 && arr[idx - 1].dayOfMonth !== x.dayOfMonth)
+            ) {
               return (
                 <Col>
                   <Card>

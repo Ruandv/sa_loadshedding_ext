@@ -1,5 +1,7 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { StorageKeys } from "../enums/storageKeys";
 import LoggingService from "../service/logging.service";
+import StorageService from "../service/storage.service";
 
 export enum ThemeColours {
   "LIGHTMODE" = "LIGHTMODE",
@@ -16,16 +18,25 @@ export const ThemeContext = createContext(null as any);
 
 export function ThemeProvider(props: any) {
   const loggingService = LoggingService.getInstance();
-  
-  const [theme, setTheme] = useState<ThemeColours>(ThemeColours.LIGHTMODE);
+  const storageService = StorageService.getInstance();
+
+  const [theme, setTheme] = useState<ThemeColours>();
 
   const toggleTheme = () => {
-    setTheme((curr: ThemeColours) =>
+    setTheme((curr: ThemeColours | undefined) =>
       curr === ThemeColours.LIGHTMODE
         ? ThemeColours.DARKMODE
         : ThemeColours.LIGHTMODE
     );
   };
+
+  useEffect(() => {
+    storageService.saveData(StorageKeys.darkMode, theme);
+  }, [theme]);
+
+  useEffect(() => {
+    storageService.getData(StorageKeys.darkMode).then((x) => setTheme(x));
+  }, []);
 
   return (
     <ThemeContext.Provider

@@ -1,6 +1,7 @@
 export interface Suburb {
     blockId: string;
     subName: string;
+    municipalityId: number;
 }
 
 export interface Municipality {

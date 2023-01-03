@@ -36,9 +36,6 @@ function App() {
       setStage(x);
     });
     storageService.getData(StorageKeys.lastSelectedTab).then((x) => {
-      if (x === "newSub") {
-        setLastSelectedTab(suburbList![0].subName);
-      }
       setLastSelectedTab(x);
     });
   }, []);
@@ -121,7 +118,6 @@ function App() {
                       suburb={x}
                       stage={stage ? stage : 6}
                       onIsBusyChanged={(data) => {
-                        console.log("DATA ", data.message);
                         setMessage(data.message);
                         setProcessing(data.isLoading);
                       }}

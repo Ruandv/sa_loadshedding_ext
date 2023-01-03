@@ -6,6 +6,7 @@ export default class RuanService {
     private loggingService = LoggingService.getInstance();
 
     private baseUrl = "https://eskom-calendar-api.azurewebsites.net/api/Eskom";
+    // private baseUrl = "https://localhost:44373/api/Eskom";
 
     private myHeaders = new Headers({
         //"accept": "application/json",
@@ -37,8 +38,8 @@ export default class RuanService {
         }
     }
 
-    public getSchedule = async (blockId: string, stage: number, days: number): Promise<StageInfoModel[]> => {
-        const stageInfoRequest = new Request(`${this.baseUrl}/GetSchedule?blockId=${blockId}&days=${days}&stage=${stage}`, {
+    public getSchedule = async (blockId: string, stage: number, days: number,municipalityId:number): Promise<StageInfoModel[]> => {
+        const stageInfoRequest = new Request(`${this.baseUrl}/GetSchedule?blockId=${blockId}&days=${days}&stage=${stage}&municipalityId=${municipalityId}`, {
             method: 'Get',
             mode: 'cors',
             headers: this.myHeaders,

@@ -45,7 +45,7 @@ function App() {
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((x) => {
               return (
                 <option
-                  value={x}
+                  value={x-1}
                   selected={x.toString() == daySelected?.toString()}
                 >
                   {x}
