@@ -20,7 +20,6 @@ export function ThemeProvider(props: any) {
   const [theme, setTheme] = useState<ThemeColours>(ThemeColours.LIGHTMODE);
 
   const toggleTheme = () => {
-    loggingService.echo("CHECKING");
     setTheme((curr: ThemeColours) =>
       curr === ThemeColours.LIGHTMODE
         ? ThemeColours.DARKMODE

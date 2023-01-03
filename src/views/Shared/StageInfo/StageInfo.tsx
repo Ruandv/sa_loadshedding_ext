@@ -89,6 +89,20 @@ function StageInfo({
                 </Col>
               );
             }
+            else if(idx===0){
+              return (
+                <Col>
+                  <Card>
+                    <Card.Header>
+                      {x.dayOfMonth.toString().substring(0, 10)}
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Text>{getInfo(arr, idx, stage)}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            }
           })}
         </Row>
       </div>

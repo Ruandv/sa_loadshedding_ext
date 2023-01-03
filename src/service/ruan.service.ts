@@ -47,7 +47,6 @@ export default class RuanService {
         })
         return fetch(stageInfoRequest)
             .then(x => {
-                debugger;
                 return x.json()
             })
             .then(d => {

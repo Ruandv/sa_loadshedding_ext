@@ -30,7 +30,7 @@
     "default_popup": "popup.html",
     "default_title": "COJ Loadshedding"
   },
-  "permissions": ["storage", "alarms","tabs","activeTab"],
+  "permissions": ["storage", "alarms"],
   "host_permissions": ["https://loadshedding.eskom.co.za/*","https://eskom-calendar-api.azurewebsites.net/*"],
   "options_ui": {
     "page": "options.html",
