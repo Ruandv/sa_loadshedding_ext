@@ -27,7 +27,7 @@ function StageInfo({
   }, [loading, message]);
   useEffect(() => {
     setTimeout(function () {
-      if (doneYet == false) {
+      if (doneYet === false) {
         setLoading({ isLoading: true, message: message });
       }
     }, 1000);
@@ -52,14 +52,27 @@ function StageInfo({
     };
     getDataRes();
   }, []);
-
+  var hasNextTime = false;
+  const getClass = (dt: Date, slotStart:Date) => {
+    if (
+      hasNextTime === false &&
+      ((dt.getDate() === new Date().getDate() &&
+      slotStart.getHours() >= new Date().getHours())||
+      (dt.getDate() > new Date().getDate()))
+    ) {
+      hasNextTime = true;
+      return "bg-warning";
+    }
+    return "";
+  };
   const getInfo = (arr: StageInfoModel[], idx: number, stage: number) => {
     var i = idx;
     var data = "";
     while (arr[i]?.dayOfMonth === arr[idx]?.dayOfMonth) {
       if (arr[i]?.stage <= stage) {
+        var hoursValue = +arr[i].start.substring(0,2);
         data += `
-        <Row>
+        <Row class='${getClass(new Date(arr[i].dayOfMonth),new Date(new Date().setHours(hoursValue)))}'>
           <Col>
             ${arr[i].start} - ${arr[i].end}<sub>${arr[i].stage}</sub>
           </Col>
@@ -92,6 +105,8 @@ function StageInfo({
                   </Card>
                 </Col>
               );
+            } else {
+              return "";
             }
           })}
         </Row>

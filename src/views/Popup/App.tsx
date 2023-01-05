@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./App.scss";
 import {
   Dropdown,
@@ -66,7 +66,7 @@ function App() {
     <div className={`App`} id={theme.selectedTheme}>
       <div
         id="overlay"
-        className={`${processing == true ? "overlay" : "hideOverlay"}`}
+        className={`${processing === true ? "overlay" : "hideOverlay"}`}
       >
         <div>{message}</div>
       </div>
