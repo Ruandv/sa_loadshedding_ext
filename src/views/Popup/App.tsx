@@ -39,7 +39,7 @@ function App() {
       setLastSelectedTab(x);
     });
   }, []);
-
+  // old comment
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
     setLastSelectedTab(x);
