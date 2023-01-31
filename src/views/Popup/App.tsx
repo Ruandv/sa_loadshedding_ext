@@ -29,6 +29,7 @@ function App() {
   const storageService = StorageService.getInstance();
   const theme = useContext(ThemeContext);
   useEffect(() => {
+    
     storageService
       .getData(StorageKeys.suburbList)
       .then((x) => setSuburbList(x));
@@ -93,7 +94,7 @@ function App() {
               </Dropdown>
             </InputGroup>
           </Col>
-          <Col>
+          <Col style={{ display: "flex", justifyContent: "end" }}>
             <ThemeSelector></ThemeSelector>
           </Col>
         </Row>

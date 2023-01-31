@@ -20,25 +20,43 @@ function getRandomToken() {
     }
     return hex;
 }
-chrome.runtime.onInstalled.addListener(async () => {
-    await chrome.storage.local.clear();
-    await chrome.alarms.clearAll();
-    var token = getRandomToken();
-    await storageService.saveData(StorageKeys.userToken, token)
-    loggingService.LogToServer(MessageTypes.INSTALLED, { message: "INSTALLED" });
-    chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
-    chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
-    storageService.saveData(StorageKeys.installedDate, new Date().toUTCString())
-    storageService
-        .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
-    storageService.saveData(StorageKeys.defaultDays, 5);
-    chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
-    loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
+// Check whether new version is installed
+if (typeof chrome.runtime.onInstalled !== 'undefined') {
+    chrome.runtime.onInstalled.addListener(async (details) => {
 
-    await eskomapi.getStatus().then((status) => {
-        storageService.saveData(StorageKeys.currentStage, status)
-    }).catch(err => loggingService.echo(err.message, null, null, "error"))
-});
+        let status = "existing";
+        const prevVersion = details.previousVersion ? details.previousVersion : '';
+        const timestamp = new Date().toLocaleString();
+        let newVersion = '';
+        var token = getRandomToken();
+
+        if (details.reason === "install"){
+            status = "installed";
+          } else if (details.reason === "update"){
+            token = await storageService.getData(StorageKeys.userToken)
+            newVersion = chrome.runtime.getManifest().version;
+            status = "updated";
+          }
+
+        // await chrome.storage.local.clear();
+        // await chrome.alarms.clearAll();
+        
+        await storageService.saveData(StorageKeys.userToken, token)
+        loggingService.LogToServer(MessageTypes.INSTALLED, { message: "INSTALLED" });
+        chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
+        chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
+        storageService.saveData(StorageKeys.installedDate, new Date().toUTCString())
+        storageService
+            .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
+        storageService.saveData(StorageKeys.defaultDays, 5);
+        chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
+        loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
+
+        await eskomapi.getStatus().then((status) => {
+            storageService.saveData(StorageKeys.currentStage, status)
+        }).catch(err => loggingService.echo(err.message, null, null, "error"))
+    });
+}
 
 chrome.alarms.onAlarm.addListener((x) => {
     switch (x.name) {

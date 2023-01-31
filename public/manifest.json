@@ -1,17 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Eskom Loadshedding",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Loadshedding extension for COJ/Tshwane",
   "background": {
     "service_worker": "static/js/background.js"
   },
-  "content_scripts": [
-    {
-      "js": ["static/js/content.js"],
-      "matches": ["http://*.example.com/*", "https://*.example.com/*"]
-    }
-  ],
   "icons": {
     "16": "images/get_started16.png",
     "19": "images/get_started19.png",
