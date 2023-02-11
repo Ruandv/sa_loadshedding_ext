@@ -27,30 +27,32 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         let status = "existing";
         const prevVersion = details.previousVersion ? details.previousVersion : '';
         const timestamp = new Date().toLocaleString();
-        let newVersion = '';
+        let newVersion = prevVersion;
+        console.log(newVersion);
         var token = getRandomToken();
 
-        if (details.reason === "install"){
-            status = "installed";
-          } else if (details.reason === "update"){
+        if (details.reason === "install") {
+            status = MessageTypes.INSTALLED;
+        } else if (details.reason === "update") {
             token = await storageService.getData(StorageKeys.userToken)
-            newVersion = chrome.runtime.getManifest().version;
-            status = "updated";
-          }
+            status = MessageTypes.UPDATED;
+        }
 
-        // await chrome.storage.local.clear();
-        // await chrome.alarms.clearAll();
-        
         await storageService.saveData(StorageKeys.userToken, token)
-        loggingService.LogToServer(MessageTypes.INSTALLED, { message: "INSTALLED" });
-        chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
-        chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
-        storageService.saveData(StorageKeys.installedDate, new Date().toUTCString())
-        storageService
-            .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
-        storageService.saveData(StorageKeys.defaultDays, 5);
-        chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
-        loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
+        loggingService.LogToServer(status as MessageTypes, { message: status });
+        chrome.runtime.setUninstallURL(`https://docs.google.com/forms/d/e/1FAIpQLSes4V7u864gG2Snpr6ZzYtqTB3Kuw1W1ODaQqmomBUBBZLySA/viewform?usp=sf_link`);
+        if (status === MessageTypes.INSTALLED) {
+            chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
+            storageService.saveData(StorageKeys.installedDate, timestamp)
+            storageService
+                .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
+            storageService.saveData(StorageKeys.defaultDays, 5);
+            chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
+            loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
+        }
+        else{
+            storageService.saveData(StorageKeys.lastUpdated, timestamp)
+        }
 
         await eskomapi.getStatus().then((status) => {
             storageService.saveData(StorageKeys.currentStage, status)

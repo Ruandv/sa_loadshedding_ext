@@ -1,40 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./StageInfo.scss";
 import { Row, Col, Card } from "react-bootstrap";
 import { StageInfoModel, Suburb } from "../../../interfaces/userDetails";
 import RuanService from "../../../service/ruan.service";
-import { StorageKeys } from "../../../enums/storageKeys";
-import StorageService from "../../../service/storage.service";
 
 export interface StageInfoProps {
   suburb: Suburb;
   stage: number;
   onIsBusyChanged?: (data: any) => void;
+  days?: number;
 }
 function StageInfo({
   suburb,
   stage,
   onIsBusyChanged: isBusyProcessing,
+  days,
 }: StageInfoProps) {
   const ruanService = RuanService.getInstance();
-  const storageService = StorageService.getInstance();
   const [scheduleData, setScheduleData] = useState<StageInfoModel[]>();
   const [loading, setLoading] = useState({});
-  const [message, setMessage] = useState("Processing...");
-  var doneYet = false;
+  var doneYet = useRef(true);
+
+  const checkBack = () =>
+    setTimeout(function () {
+      if (doneYet.current === false) {
+        setLoading({
+          isLoading: true,
+          message: "The server is taking its time...",
+        });
+        checkBack();
+      } else {
+        setLoading({ isLoading: false, message: "DONE!" });
+      }
+    }, 2000);
+
+  useEffect(() => {
+    if (doneYet.current === true) {
+      isBusyProcessing!({ isLoading: false, message: "DONE" });
+    } else {
+      checkBack();
+    }
+  }, [doneYet.current]);
+
   useEffect(() => {
     isBusyProcessing!(loading);
-  }, [loading, message]);
-  useEffect(() => {
-    setTimeout(function () {
-      if (doneYet === false) {
-        setLoading({ isLoading: true, message: message });
-      }
-    }, 1000);
+  }, [loading]);
 
+  useEffect(() => {
+    doneYet.current = false;
     const getDataRes = async () => {
       try {
-        var days = await storageService.getData(StorageKeys.defaultDays);
         var res = await ruanService.getSchedule(
           suburb.blockId,
           stage,
@@ -42,23 +57,26 @@ function StageInfo({
           suburb.municipalityId
         );
         setScheduleData(res);
-        doneYet = true;
-        setLoading(false);
+        doneYet.current = true;
       } catch (err) {
         const error = err as any;
-        setMessage(error.message.toString());
+        setLoading({
+          isLoading: false,
+          message: `ERROR : ${error.message.toString()}`,
+        });
       } finally {
       }
     };
     getDataRes();
   }, []);
+
   var hasNextTime = false;
-  const getClass = (dt: Date, slotStart:Date) => {
+  const getClass = (dt: Date, slotStart: Date) => {
     if (
       hasNextTime === false &&
       ((dt.getDate() === new Date().getDate() &&
-      slotStart.getHours() >= new Date().getHours())||
-      (dt.getDate() > new Date().getDate()))
+        slotStart.getHours() >= new Date().getHours()) ||
+        dt.getDate() > new Date().getDate())
     ) {
       hasNextTime = true;
       return "bg-warning";
@@ -70,9 +88,12 @@ function StageInfo({
     var data = "";
     while (arr[i]?.dayOfMonth === arr[idx]?.dayOfMonth) {
       if (arr[i]?.stage <= stage) {
-        var hoursValue = +arr[i].start.substring(0,2);
+        var hoursValue = +arr[i].start.substring(0, 2);
         data += `
-        <Row class='${getClass(new Date(arr[i].dayOfMonth),new Date(new Date().setHours(hoursValue)))}'>
+        <Row class='${getClass(
+          new Date(arr[i].dayOfMonth),
+          new Date(new Date().setHours(hoursValue))
+        )}'>
           <Col>
             ${arr[i].start} - ${arr[i].end}<sub>${arr[i].stage}</sub>
           </Col>

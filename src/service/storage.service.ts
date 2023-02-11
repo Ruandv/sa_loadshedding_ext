@@ -21,7 +21,7 @@ export default class StorageService {
 
     public getData = async (key: StorageKeys) => {
         var res = await chrome.storage.local.get(key);
-        this.loggingService.echo("Getting data for ", key , res)
+        this.loggingService.echo(`Getting data for ${key}`, key , res)
         return res[key];
     }
 

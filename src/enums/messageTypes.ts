@@ -1,5 +1,6 @@
 export enum MessageTypes {
     "INSTALLED" = "INSTALLED",
+    "UPDATED" = "UPDATED",
     "UNINSTALLED" = "UNINSTALLED",
     "SUBURBADDED" = "SUBURBADDED",
     "SUBURBREMOVED" = "SUBURBREMOVED",

@@ -16,28 +16,46 @@ export interface NewSuburbProps {
 function NewSuburb({
   suburbList,
   onSuburbListChanged,
-  onIsBusyChanged,
+  onIsBusyChanged: isBusyProcessing,
 }: NewSuburbProps) {
   const ruanService = RuanService.getInstance();
   const storageService = StorageService.getInstance();
   const loggingService = LoggingService.getInstance();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({});
   const selection = useRef<any>();
   const municipalitySelection = useRef<any>();
   const [list, setList] = useState({} as Municipality);
-  const [message, setMessage] = useState<string>("Please wait...");
+
   const MunicipalityList = [
     { id: 166, name: "City of Johannesburg" },
     { id: 167, name: "Tshwane" },
   ];
-  var doneYet = true;
-  useEffect(() => {
+  var doneYet = useRef(true);
+  var c = 0;
+  const checkBack = () =>
     setTimeout(function () {
-      if (doneYet == false) {
-        onIsBusyChanged!({ isBusy: !loading, message: message });
+      if (doneYet.current === false) {
+        setLoading({
+          isLoading: true,
+          message: "The server is taking its time..." + c,
+        });
+        c = c + 1;
+        checkBack();
+      } else {
+        loggingService.echo("PROCESSING DONE", undefined, undefined, "warning");
+        setLoading({ isLoading: false, message: "DONE!" });
       }
-    }, 1000);
-  }, [loading, message]);
+    }, 2000);
+
+  useEffect(() => {
+    isBusyProcessing!(loading);
+  }, [loading]);
+
+  useEffect(() => {
+    if (doneYet.current === true) {
+      isBusyProcessing!({ isLoading: false, message: "DONE" });
+    }
+  }, [doneYet.current]);
 
   var removeSuburb = (x: Suburb) => {
     var c = [...suburbList!];
@@ -46,7 +64,7 @@ function NewSuburb({
 
     storageService.saveData(StorageKeys.suburbList, c);
     loggingService.LogToServer(MessageTypes.SUBURBREMOVED, {
-      SuburbName: x.subName,
+      suburbName: x.subName,
     });
     onSuburbListChanged(c);
   };
@@ -66,25 +84,22 @@ function NewSuburb({
     c.push({ blockId: curValue, subName: curText, municipalityId: munValue });
     storageService.saveData(StorageKeys.suburbList, c);
     loggingService.LogToServer(MessageTypes.SUBURBADDED, {
-      SuburbName: curText,
+      suburbName: curText,
     });
     onSuburbListChanged(c);
   };
 
   const updateSuburbs = async (e: any) => {
     var curValue = e.target.value;
-    //  var curText = opt.text;
-    setMessage("Please wait");
-    setLoading(true);
-    doneYet = false;
+    doneYet.current = false;
     const getSuburbs = async () => {
       try {
         setList(await ruanService.getSuburbData(curValue));
-        doneYet = true;
-        setLoading(false);
       } catch (err) {
-        console.log("ERROR");
-        setMessage("Error trying to fetch suburb data");
+        setLoading({
+          isLoading: true,
+          message: "ERROR TRYING TO RETRIEVE SUBURBS",
+        });
       } finally {
       }
     };
@@ -108,6 +123,9 @@ function NewSuburb({
           <Form.Select ref={selection}>
             <option>Please select</option>
             {list?.Suburbs?.map((x) => {
+              if (list!.Suburbs!.indexOf(x) === list.Suburbs.length - 1) {
+                doneYet.current = true;
+              }
               return <option value={x.blockId}>{x.subName}</option>;
             })}
           </Form.Select>

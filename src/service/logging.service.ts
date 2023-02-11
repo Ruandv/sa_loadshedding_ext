@@ -5,12 +5,14 @@ import StorageService from "./storage.service";
 export default class LoggingService {
   private static service: LoggingService;
   private static storageService: StorageService;
+  private static appVersion: string;
   private static baseUrl = "https://eskom-calendar-api.azurewebsites.net/api/Logging";
-  // private static baseUrl = "https://localhost:44373/api/logging";
+  //private static baseUrl = "https://localhost:44373/api/logging";
   public static getInstance() {
     if (!this.service) {
       this.service = new LoggingService();
       this.storageService = StorageService.getInstance();
+      this.appVersion = chrome.runtime.getManifest().version;
     }
 
     return this.service;
@@ -59,20 +61,27 @@ export default class LoggingService {
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
     "content-type": "application/json",
-});
+  });
 
-  public LogToServer(messageType: MessageTypes, message: any) {
+  public LogToServer(messageType: MessageTypes, msg: any) {
     try {
 
       LoggingService.storageService.getData(StorageKeys.userToken).then(t => {
-        this.echo(JSON.stringify({ messageType: messageType, userToken: t, message: JSON.stringify(message) }))
+        msg['userToken'] = t;
+        msg['appVersion'] = LoggingService.appVersion;
+        msg['appVersion'] = LoggingService.appVersion;
+        var requestMessage = {
+          messageType: messageType,
+          message: JSON.stringify(msg)
+        }
+        this.echo(JSON.stringify(requestMessage))
         try {
           const loggingRequest = new Request(`${LoggingService.baseUrl}`, {
             method: 'Post',
             mode: 'cors',
             headers: this.myHeaders,
             cache: 'default',
-            body: JSON.stringify({ messageType: messageType, userToken: t, message: JSON.stringify(message) })
+            body: JSON.stringify(requestMessage)
           })
           return fetch(loggingRequest);
         } catch (ex) {

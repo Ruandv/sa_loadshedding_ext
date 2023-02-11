@@ -1,5 +1,6 @@
 export enum StorageKeys {
     "installedDate" = "installedDate",
+    "lastUpdated" = "lastUpdated",
     "currentStage" = "currentStage",
     "suburbList" = "suburbList",
     "lastSelectedTab" = "lastSelectedTab",

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./App.scss";
 import {
   Dropdown,
@@ -22,14 +22,14 @@ import ThemeSelector from "../../components/themeSelector/themeSelector";
 function App() {
   const [suburbList, setSuburbList] = useState<Array<Suburb>>([]);
   const [stage, setStage] = useState<number>();
-  const [message, setMessage] = useState<string>("Please wait...");
+  const [message, setMessage] = useState("Please wait...");
   const [lastSelectedTab, setLastSelectedTab] = useState<string>();
-  const [processing, setProcessing] = useState(false);
+  const [processing, setProcessing] = useState<boolean>(false);
   const loggingService = LoggingService.getInstance();
   const storageService = StorageService.getInstance();
+  const days = useRef(5);
   const theme = useContext(ThemeContext);
   useEffect(() => {
-    
     storageService
       .getData(StorageKeys.suburbList)
       .then((x) => setSuburbList(x));
@@ -37,14 +37,17 @@ function App() {
       setStage(x);
     });
     storageService.getData(StorageKeys.lastSelectedTab).then((x) => {
-      setLastSelectedTab(x);
+      setKey(x);
     });
+    storageService
+      .getData(StorageKeys.defaultDays)
+      .then((x) => (days.current = x));
   }, []);
-  // old comment
+
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
     setLastSelectedTab(x);
-    loggingService.LogToServer(MessageTypes.SUBURBVIEWED, { SuburbName: x });
+    loggingService.LogToServer(MessageTypes.SUBURBVIEWED, { suburbName: x });
   };
 
   const getVariant = () => {
@@ -122,17 +125,18 @@ function App() {
                         setMessage(data.message);
                         setProcessing(data.isLoading);
                       }}
+                      days={days.current}
                     ></StageInfo>
                   </Tab>
                 );
               })}
-              <Tab eventKey={"newSub"} title={"+"}>
+              <Tab eventKey={"newSub"} title={`+`}>
                 <NewSuburb
                   suburbList={suburbList!}
                   onSuburbListChanged={(e) => setSuburbList(e)}
-                  onIsBusyChanged={(b) => {
-                    setProcessing(b.isBusy);
-                    setMessage(b.message);
+                  onIsBusyChanged={(data) => {
+                    setProcessing(data.isLoading);
+                    setMessage(data.message);
                   }}
                 ></NewSuburb>
               </Tab>
