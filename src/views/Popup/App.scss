@@ -37,10 +37,20 @@
   .btn-primary {
     background-color: #6c757d;
   }
+
+  .nav-link, label{
+    color:#f8f9fa;
+  }
+  .nav-link.active{
+    color:var(--bs-card-cap-color);;
+  }
 }
 
 #LIGHTMODE {
   .card {
     background-color: #f8f9fa;
   }
+}
+.footer{
+  padding: 10px 0px;
 }
