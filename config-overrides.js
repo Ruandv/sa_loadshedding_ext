@@ -2,7 +2,8 @@ const paths = require('react-scripts/config/paths');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const PACKAGE = require('./package.json');
+const ChromeExtensionManifest = require('chrome-extension-manifest-webpack-plugin');
 // Export override function(s) via object
 module.exports = {
   webpack: override,
@@ -23,7 +24,7 @@ function override(config, env) {
   config.output.filename = 'static/js/[name].js';
   // Disable built-in SplitChunksPlugin
   config.optimization.splitChunks = {
-    cacheGroups: {default: false}
+    cacheGroups: { default: false }
   };
   // Disable runtime chunk addition for each entry point
   config.optimization.runtimeChunk = false;
@@ -42,7 +43,7 @@ function override(config, env) {
     minifyURLs: true,
   };
   const isEnvProduction = env === 'production';
-  
+
   // Custom HtmlWebpackPlugin instance for index (popup) page
   const indexHtmlPlugin = new HtmlWebpackPlugin({
     inject: true,
@@ -71,8 +72,23 @@ function override(config, env) {
   // Custom ManifestPlugin instance to cast asset-manifest.json back to old plain format
   const manifestPlugin = new (ManifestPlugin.WebpackManifestPlugin ||
     ManifestPlugin)({
-    fileName: 'asset-manifest.json',
+      fileName: 'asset-manifest.json',
+    });
+
+  // Replace the manifest version with what is in package.json
+var version = PACKAGE.version;
+  var manifestUpdater = new ChromeExtensionManifest({
+    inputFile: './public/manifest.json',
+    outputFile: './public/manifest.json',
+    replace: [{
+       pattern: /__version__/g,
+       value: 'args.version'
+    }],
+    props: {
+        version: version    
+    }
   });
+  config.plugins.push(manifestUpdater);
   // Replace original ManifestPlugin instance in config.plugins with the above one
   config.plugins = replacePlugin(config.plugins,
     (name) => /ManifestPlugin/i.test(name), manifestPlugin
@@ -101,7 +117,7 @@ function replacePlugin(plugins, nameMatcher, newPlugin) {
     return plugin.constructor && plugin.constructor.name &&
       nameMatcher(plugin.constructor.name);
   });
-  return i > -1?
-    plugins.slice(0, i).concat(newPlugin || []).concat(plugins.slice(i+1)) :
+  return i > -1 ?
+    plugins.slice(0, i).concat(newPlugin || []).concat(plugins.slice(i + 1)) :
     plugins;
 }
