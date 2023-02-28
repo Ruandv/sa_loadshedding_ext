@@ -115,7 +115,7 @@ function App() {
               }}
               className="mb-3"
             >
-              {suburbList?.map((x, i) => {
+              {suburbList?.map((x:Suburb) => {
                 return (
                   <Tab eventKey={x.subName} title={x.subName}>
                     <StageInfo
@@ -142,6 +142,9 @@ function App() {
               </Tab>
             </Tabs>
           </Col>
+        </Row>
+        <Row>
+          <Col className="footer"><a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button></a></Col>
         </Row>
       </Container>
     </div>
