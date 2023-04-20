@@ -40,7 +40,11 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
 
         await storageService.saveData(StorageKeys.userToken, token)
         loggingService.LogToServer(status as MessageTypes, { message: status });
+<<<<<<< HEAD
         chrome.runtime.setUninstallURL(`https://docs.google.com/forms/d/e/1FAIpQLSes4V7u864gG2Snpr6ZzYtqTB3Kuw1W1ODaQqmomBUBBZLySA/viewform?usp=sf_link`);
+=======
+        chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
+>>>>>>> fix/styling
         chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
         if (status === MessageTypes.INSTALLED) {
             chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });

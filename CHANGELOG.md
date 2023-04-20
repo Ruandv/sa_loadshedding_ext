@@ -1,3 +1,9 @@
+#### 2.0.8 (2023-04-20)
+
+##### Chores
+
+*  included extensionKey to manifest (0d97f368)
+
 #### 2.0.7 (2023-02-27)
 
 ##### Chores

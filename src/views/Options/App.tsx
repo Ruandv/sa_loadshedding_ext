@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <div
         id="overlay"
-        className={`${processing == true ? "overlay" : "hideOverlay"}`}
+        className={`${processing === true ? "overlay" : "hideOverlay"}`}
       >
         <div>{msg}</div>
       </div>
@@ -46,7 +46,7 @@ function App() {
               return (
                 <option
                   value={x-1}
-                  selected={x.toString() == daySelected?.toString()}
+                  selected={x.toString() === daySelected?.toString()}
                 >
                   {x}
                 </option>
