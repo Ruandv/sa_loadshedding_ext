@@ -29,6 +29,7 @@ function NewSuburb({
   const MunicipalityList = [
     { id: 166, name: "City of Johannesburg" },
     { id: 167, name: "Tshwane" },
+    { id: 168, name: "Ekhuruleni" },
   ];
   var doneYet = useRef(true);
   var c = 0;
