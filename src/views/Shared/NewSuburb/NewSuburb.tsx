@@ -21,7 +21,6 @@ function NewSuburb({
   const ruanService = RuanService.getInstance();
   const storageService = StorageService.getInstance();
   const loggingService = LoggingService.getInstance();
-  const [loading, setLoading] = useState({});
   const [municipalityList, setMunicipalityList] = useState<Municipality[]>([]);
   const municipalitySelection = useRef<any>();
   const suburbSelection = useRef<any>();
@@ -29,26 +28,6 @@ function NewSuburb({
   const [searchList, setSearchList] = useState<Suburb[]>([]);
 
   var doneYet = useRef(true);
-  var c = 0;
-
-  const checkBack = () =>
-    setTimeout(function () {
-      if (doneYet.current === false) {
-        setLoading({
-          isLoading: true,
-          message: "The server is taking its time..." + c,
-        });
-        c = c + 1;
-        checkBack();
-      } else {
-        loggingService.echo("PROCESSING DONE", undefined, undefined, "warning");
-        setLoading({ isLoading: false, message: "DONE!" });
-      }
-    }, 2000);
-
-  useEffect(() => {
-    isBusyProcessing!(loading);
-  }, [loading]);
 
   useEffect(() => {
     if (doneYet.current === true) {
@@ -103,7 +82,6 @@ function NewSuburb({
   };
 
   const updateMunicipalityList = async () => {
-    checkBack();
     doneYet.current = false;
     await ruanService.getMunicipalityList(provinceSelection.current.selectedOptions[0].value).then(x => {
       doneYet.current = true;
@@ -113,7 +91,6 @@ function NewSuburb({
   }
 
   const updateSuburbsList = () => {
-    checkBack();
     doneYet.current = false;
     ruanService.getSuburbData(provinceSelection.current.selectedOptions[0].value, municipalitySelection.current.selectedOptions[0].value).then(x => {
       doneYet.current = true;
