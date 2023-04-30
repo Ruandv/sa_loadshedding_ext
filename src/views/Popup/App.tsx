@@ -29,20 +29,34 @@ function App() {
   const storageService = StorageService.getInstance();
   const days = useRef(5);
   const theme = useContext(ThemeContext);
+
+  var commitToData = async () => {
+    var subList = await storageService
+      .getData(StorageKeys.suburbList);
+    setSuburbList(subList);
+
+    var lastSelectedKey = await storageService.getData(StorageKeys.lastSelectedTab);
+    setKey(lastSelectedKey);
+
+    var defaultDaysToShow = await storageService.getData(StorageKeys.defaultDays);
+    days.current = defaultDaysToShow;
+  };
+
   useEffect(() => {
-    storageService
-      .getData(StorageKeys.suburbList)
-      .then((x) => setSuburbList(x));
-    storageService.getData(StorageKeys.currentStage).then((x) => {
-      setStage(x);
+
+    storageService.getData(StorageKeys.currentStage).then(level => {
+      setStage(level);
+      commitToData();
     });
-    storageService.getData(StorageKeys.lastSelectedTab).then((x) => {
-      setKey(x);
-    });
-    storageService
-      .getData(StorageKeys.defaultDays)
-      .then((x) => (days.current = x));
+
+
   }, []);
+
+  useEffect(() => {
+    setSuburbList([]);
+      commitToData();
+
+  }, [stage]);
 
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
@@ -86,7 +100,7 @@ function App() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  {Array.from({ length: 7 }).map((_, idx) => {
+                  {Array.from({ length: 8 }).map((_, idx) => {
                     return (
                       <Dropdown.Item eventKey={idx + 1}>
                         {idx + 1}
@@ -115,18 +129,19 @@ function App() {
               }}
               className="mb-3"
             >
-              {suburbList?.map((x:Suburb) => {
+              {suburbList?.map((x: Suburb) => {
                 return (
-                  <Tab eventKey={x.subName} title={x.subName}>
-                    <StageInfo
-                      suburb={x}
-                      stage={stage ? stage : 6}
-                      onIsBusyChanged={(data) => {
-                        setMessage(data.message);
-                        setProcessing(data.isLoading);
-                      }}
-                      days={days.current}
-                    ></StageInfo>
+                  <Tab eventKey={x.name} title={x.name}>
+                    {stage &&
+                      <StageInfo
+                        suburb={x}
+                        stage={stage ? stage : 6}
+                        onIsBusyChanged={(data) => {
+                          setMessage(data.message);
+                          setProcessing(data.isLoading);
+                        }}
+                        days={days.current}
+                      ></StageInfo>}
                   </Tab>
                 );
               })}

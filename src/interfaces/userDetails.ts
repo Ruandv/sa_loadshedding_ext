@@ -1,10 +1,17 @@
+
 export interface Suburb {
     blockId: string;
-    subName: string;
+    name: string;
     municipalityId: number;
 }
-
+export interface Province {
+    ProvinceId: number;
+    ProvinceName: string;
+    Municipalities: Municipality[];
+}
 export interface Municipality {
+    Value: number;
+    Text: string;
     Suburbs: Suburb[];
 }
 
