@@ -39,10 +39,10 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
                 var subList = await storageService.getData(StorageKeys.suburbList);
                 var newFormat = subList.map((x: any) => {
                     return {
-                        blockId: x.blockId,
+                        blockId: parseInt(x.blockId),
                         municipalityId: x.municipalityId,
                         name: x.subName
-                    } as Suburb
+                    } as unknown as Suburb
                 })
                 console.log("Updating to new fomat");
                 storageService.saveData(StorageKeys.suburbList, newFormat);
