@@ -30,7 +30,7 @@
     ],
     "host_permissions": [
         "https://loadshedding.eskom.co.za/*",
-        "https://eskom-calendar-api.azurewebsites.net/*"
+        "https://eskom-calendar-api-za.azurewebsites.net/*"
     ],
     "options_ui": {
         "page": "options.html",

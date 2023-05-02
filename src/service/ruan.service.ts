@@ -5,7 +5,7 @@ export default class RuanService {
     private static service: RuanService;
     private loggingService = LoggingService.getInstance();
 
-    private baseUrl = "https://eskom-calendar-api.azurewebsites.net/api/Eskom";
+    private baseUrl = "https://eskom-calendar-api-za.azurewebsites.net/api/Eskom";
     //private baseUrl = "https://localhost:44373/api/Eskom";
 
     private myHeaders = new Headers({
