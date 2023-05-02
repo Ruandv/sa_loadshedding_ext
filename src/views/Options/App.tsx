@@ -57,7 +57,7 @@ function App() {
         <NewSuburb
           suburbList={suburbListData}
           onSuburbListChanged={(e) => setSuburbListData(e)}
-          onIsBusyChanged={(b) => {console.log("HANDLE!!!",b);setProcessing(b)}}
+          onIsBusyChanged={(b) => {setProcessing(b)}}
         ></NewSuburb>
       </>
     </div>

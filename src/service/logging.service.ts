@@ -73,7 +73,6 @@ export default class LoggingService {
           messageType: messageType,
           message: JSON.stringify(msg)
         }
-        this.echo(JSON.stringify(requestMessage))
         try {
           const loggingRequest = new Request(`${LoggingService.baseUrl}`, {
             method: 'Post',

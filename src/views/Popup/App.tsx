@@ -5,6 +5,7 @@ import {
   InputGroup,
   Row,
   Tab,
+  Card,
   Tabs,
   Col,
   Container,
@@ -26,11 +27,11 @@ function App() {
   const [message, setMessage] = useState("Please wait...");
   const [lastSelectedTab, setLastSelectedTab] = useState<string>();
   const [processing, setProcessing] = useState<boolean>(false);
+  const [showWhatsNew, setShowWhatsNew] = useState<boolean>(false);
   const loggingService = LoggingService.getInstance();
   const storageService = StorageService.getInstance();
   const days = useRef(5);
   const theme = useContext(ThemeContext);
-
   var commitToData = async () => {
     var subList = await storageService
       .getData(StorageKeys.suburbList);
@@ -38,7 +39,7 @@ function App() {
 
     var lastSelectedKey = await storageService.getData(StorageKeys.lastSelectedTab);
     setKey(lastSelectedKey);
-
+    setShowWhatsNew(await storageService.getData(StorageKeys.showWhatsNew));
     var defaultDaysToShow = await storageService.getData(StorageKeys.defaultDays);
     days.current = defaultDaysToShow;
   };
@@ -55,7 +56,7 @@ function App() {
 
   useEffect(() => {
     setSuburbList([]);
-      commitToData();
+    commitToData();
 
   }, [stage]);
 
@@ -65,9 +66,8 @@ function App() {
     loggingService.LogToServer(MessageTypes.SUBURBVIEWED, { suburbName: x });
   };
   const exportSettings = async () => {
-    let _settings = JSON.stringify(await storageService.exportData(), null, 4); //indentation in json format, human readable
+    let _settings = JSON.stringify(await storageService.exportData(), null, 4);
 
-    debugger;
     let link = document.createElement('a'),
       blob = new Blob([_settings], { type: 'text/json' }),
       name = 'Eskom-Service-Settings.json',
@@ -92,7 +92,10 @@ function App() {
         return "primary";
     }
   };
-
+  const closeWhatsNew = async () => {
+    storageService.saveData(StorageKeys.showWhatsNew, false);
+    setShowWhatsNew(false);
+  }
   return (
     <div className={`App`} id={theme.selectedTheme}>
       <div
@@ -125,14 +128,7 @@ function App() {
             </InputGroup>
           </Col>
           <Col>
-            <Button
-              variant="primary"
-              onClick={() => {
-                exportSettings();
-              }}
-            >
-              Export
-            </Button>
+
           </Col>
           <Col style={{ display: "flex", justifyContent: "end" }}>
             <ThemeSelector></ThemeSelector>
@@ -152,6 +148,22 @@ function App() {
               }}
               className="mb-3"
             >
+              {(showWhatsNew === true || showWhatsNew === undefined) ? <Tab eventKey={'whatsNew'} title="What's new!!">
+                <Card>
+                  <Card.Header>
+                    WHAT IS NEW
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Text><ul>
+                      <li>Eskom client now part of the app</li>
+                      <li>New suburbs available</li>
+                      <li>Allow Export of your settings</li>
+                    </ul></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Button onClick={closeWhatsNew}>Close</Button>
+              </Tab> : ''}
+
               {suburbList?.map((x: Suburb) => {
                 return (
                   <Tab eventKey={x.name} title={x.name}>
@@ -168,7 +180,7 @@ function App() {
                   </Tab>
                 );
               })}
-              <Tab eventKey={"newSub"} title={`+`}>
+              <Tab eventKey={"newSub"} title={`Settings`}>
                 <NewSuburb
                   suburbList={suburbList!}
                   onSuburbListChanged={(e) => setSuburbList(e)}
@@ -177,12 +189,27 @@ function App() {
                     setMessage(data.message);
                   }}
                 ></NewSuburb>
+                <Row>
+                  <Col className="footer">
+                    <a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button>
+                    </a>
+                  </Col>
+                  <Col className="footer">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      onClick={() => {
+                        exportSettings();
+                      }}
+                    >
+                      Export settings
+                    </Button>
+                  </Col>
+
+                </Row>
               </Tab>
             </Tabs>
           </Col>
-        </Row>
-        <Row>
-          <Col className="footer"><a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button></a></Col>
         </Row>
       </Container>
     </div>

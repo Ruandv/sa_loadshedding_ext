@@ -27,13 +27,43 @@ function NewSuburb({
   const provinceSelection = useRef<any>();
   const [searchList, setSearchList] = useState<Suburb[]>([]);
 
-  var doneYet = useRef(true);
+  const [doneYet, setDoneYet] = useState({ current: true });
+  const [timerId, setTimerId] = useState<any>();
+  const getRandomMessage = () => {
+    var jokes = [
+      "Why did the light bulb go to school? To get brighter!",
+      "Why did the electrician break up with his girlfriend? She was always giving him static.",
+      "Why don't electricians ever get shocked? They're always grounded.",
+      "What do you call a light bulb that doesn't work? A filament failure.",
+      "Why did the electrician go to art school? To learn how to draw circuits.",
+      "Why did the power plant go to the doctor? It had too many blackouts.",
+      "What do you call a group of electricians? A power trip.",
+      "Why did the solar panel go to outer space? To get a sun tan."
+    ]
+    const randomIndex = Math.floor(Math.random() * jokes.length);
+    return jokes[randomIndex];
+  }
+  const checkBack = () => {
+    var MytimerId = setTimeout(function () {
+      clearTimeout(timerId);
+      if (doneYet.current === false) {
+        var msg = { isLoading: true, message: getRandomMessage() };
+        isBusyProcessing!(msg);
+        checkBack();
+      }
+    }, 2000);
+    setTimerId(MytimerId);
+  }
 
   useEffect(() => {
     if (doneYet.current === true) {
       isBusyProcessing!({ isLoading: false, message: "DONE" });
+      clearTimeout(timerId);
     }
-  }, [doneYet.current]);
+    else {
+      checkBack();
+    }
+  }, [doneYet]);
 
   let provinceList = useRef<Province[]>([
     { "ProvinceId": 1, "ProvinceName": "Eastern Cape", Municipalities: [] },
@@ -69,10 +99,10 @@ function NewSuburb({
       loggingService.LogToServer(MessageTypes.SUBURBADDED, {
         suburbName: suburb.name,
       });
-      provinceSelection.current = undefined;
-      
-      municipalitySelection.current = undefined;
-      suburbSelection.current = undefined;
+      // provinceSelection.current = undefined;
+
+      // municipalitySelection.current = undefined;
+      // suburbSelection.current = undefined;
 
       onSuburbListChanged(c);
     }
@@ -82,18 +112,18 @@ function NewSuburb({
   };
 
   const updateMunicipalityList = async () => {
-    doneYet.current = false;
+    setDoneYet({ current: false });
     await ruanService.getMunicipalityList(provinceSelection.current.selectedOptions[0].value).then(x => {
-      doneYet.current = true;
+      setDoneYet({ current: true });
       provinceSelection.current.Municipalities = x;
       setMunicipalityList(x);
     });
   }
 
   const updateSuburbsList = () => {
-    doneYet.current = false;
+    setDoneYet({ current: false });
     ruanService.getSuburbData(provinceSelection.current.selectedOptions[0].value, municipalitySelection.current.selectedOptions[0].value).then(x => {
-      doneYet.current = true;
+      setDoneYet({ current: true });
       setSearchList(x.Suburbs);
     });
   }
@@ -102,7 +132,7 @@ function NewSuburb({
     <div className="newSuburbContainer">
       <>
         <Form.Group className="mb-3">
-          <Form.Label>Province</Form.Label>
+          <Form.Label>Province {doneYet.current.toString()} {timerId}</Form.Label>
           <Form.Select ref={provinceSelection} onChange={() => updateMunicipalityList()}>
             <option>Please select</option>
             {provinceList.current?.map((x) => {
@@ -128,11 +158,12 @@ function NewSuburb({
             })}
           </Form.Select>
           <Form.Text id="helpBlock" muted>
-        * indicates a direct eskom client.
-      </Form.Text>
+            * indicates a direct eskom client.
+          </Form.Text>
         </Form.Group>
         <Form.Group className={`mb-3`}>
           <Button
+            size="sm"
             variant="primary"
             onClick={() => {
               addSuburb();

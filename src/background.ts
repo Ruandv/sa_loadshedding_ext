@@ -35,7 +35,8 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         } else if (details.reason === "update") {
             const newVersion = chrome.runtime.getManifest().version;
             if (newVersion === '2.0.15' && prevVersion !== newVersion) {
-                // update all suburbList.subName to suburbList.name
+                storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
+                storageService.saveData(StorageKeys.showWhatsNew,true)
                 var subList = await storageService.getData(StorageKeys.suburbList);
                 var newFormat = subList.map((x: any) => {
                     return {
@@ -44,14 +45,11 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
                         name: x.subName
                     } as unknown as Suburb
                 })
-                console.log("Updating to new fomat");
                 storageService.saveData(StorageKeys.suburbList, newFormat);
             }
-            loggingService.echo("UPDATING!!!!!", JSON.stringify(details));
             token = await storageService.getData(StorageKeys.userToken)
             status = MessageTypes.UPDATED;
         }
-
         await storageService.saveData(StorageKeys.userToken, token)
         loggingService.LogToServer(status as MessageTypes, { message: status });
         chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
@@ -62,7 +60,6 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             storageService
                 .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
             storageService.saveData(StorageKeys.defaultDays, 5);
-            loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
         }
         else {
             storageService.saveData(StorageKeys.lastUpdated, timestamp)

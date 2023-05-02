@@ -20,9 +20,11 @@ function StageInfo({
   const [scheduleData, setScheduleData] = useState<StageInfoModel[]>();
   const [loading, setLoading] = useState({});
   var doneYet = useRef(true);
+  var timerId: any;
 
   const checkBack = () =>
-    setTimeout(function () {
+    timerId = setTimeout(function () {
+      clearTimeout(timerId);
       if (doneYet.current === false) {
         setLoading({
           isLoading: true,
@@ -35,6 +37,7 @@ function StageInfo({
     }, 2000);
 
   useEffect(() => {
+    clearTimeout(timerId);
     if (doneYet.current === true) {
       isBusyProcessing!({ isLoading: false, message: "DONE" });
     } else {
