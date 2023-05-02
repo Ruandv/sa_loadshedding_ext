@@ -8,6 +8,7 @@ import {
   Tabs,
   Col,
   Container,
+  Button,
 } from "react-bootstrap";
 import { StorageKeys } from "../../enums/storageKeys";
 import { Suburb } from "../../interfaces/userDetails";
@@ -63,7 +64,19 @@ function App() {
     setLastSelectedTab(x);
     loggingService.LogToServer(MessageTypes.SUBURBVIEWED, { suburbName: x });
   };
+  const exportSettings = async () => {
+    let _settings = JSON.stringify(await storageService.exportData(), null, 4); //indentation in json format, human readable
 
+    debugger;
+    let link = document.createElement('a'),
+      blob = new Blob([_settings], { type: 'text/json' }),
+      name = 'Eskom-Service-Settings.json',
+      url = window.URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', name);
+    link.click();
+  }
   const getVariant = () => {
     switch (stage) {
       case 1:
@@ -110,6 +123,16 @@ function App() {
                 </Dropdown.Menu>
               </Dropdown>
             </InputGroup>
+          </Col>
+          <Col>
+            <Button
+              variant="primary"
+              onClick={() => {
+                exportSettings();
+              }}
+            >
+              Export
+            </Button>
           </Col>
           <Col style={{ display: "flex", justifyContent: "end" }}>
             <ThemeSelector></ThemeSelector>
