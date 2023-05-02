@@ -34,7 +34,7 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             status = MessageTypes.INSTALLED;
         } else if (details.reason === "update") {
             const newVersion = chrome.runtime.getManifest().version;
-            if (newVersion === '2.0.15') {
+            if (newVersion === '2.0.15' && prevVersion !== newVersion) {
                 // update all suburbList.subName to suburbList.name
                 var subList = await storageService.getData(StorageKeys.suburbList);
                 var newFormat = subList.map((x: any) => {
