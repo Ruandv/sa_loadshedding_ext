@@ -149,6 +149,7 @@ function App() {
               className="mb-3"
             >
               {(showWhatsNew === true || showWhatsNew === undefined) ? <Tab eventKey={'whatsNew'} title="What's new!!">
+                <p>
                 <Card>
                   <Card.Header>
                     WHAT IS NEW
@@ -161,7 +162,8 @@ function App() {
                     </ul></Card.Text>
                   </Card.Body>
                 </Card>
-                <Button onClick={closeWhatsNew}>Close</Button>
+                </p>
+                  <Button onClick={closeWhatsNew}>Close</Button>
               </Tab> : ''}
 
               {suburbList?.map((x: Suburb) => {
