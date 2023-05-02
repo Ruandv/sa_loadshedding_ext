@@ -5,6 +5,7 @@ import { Suburb } from "./interfaces/userDetails";
 import StorageService from "./service/storage.service";
 import { StorageKeys } from "./enums/storageKeys";
 import { MessageTypes } from "./enums/messageTypes";
+import RuanService from "./service/ruan.service";
 
 const eskomapi = eskomApi.getInstance();
 var loggingService = LoggingService.getInstance();
@@ -27,14 +28,26 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         let status = "existing";
         const prevVersion = details.previousVersion ? details.previousVersion : '';
         const timestamp = new Date().toLocaleString();
-        let newVersion = prevVersion;
-        console.log(newVersion);
         var token = getRandomToken();
 
         if (details.reason === "install") {
             status = MessageTypes.INSTALLED;
         } else if (details.reason === "update") {
-            loggingService.echo("UPDATING!!!!!",JSON.stringify(details));
+            const newVersion = chrome.runtime.getManifest().version;
+            if (newVersion === '2.0.15') {
+                // update all suburbList.subName to suburbList.name
+                var subList = await storageService.getData(StorageKeys.suburbList);
+                var newFormat = subList.map((x: any) => {
+                    return {
+                        blockId: x.blockId,
+                        municipalityId: x.municipalityId,
+                        name: x.subName
+                    } as Suburb
+                })
+                console.log("Updating to new fomat");
+                storageService.saveData(StorageKeys.suburbList, newFormat);
+            }
+            loggingService.echo("UPDATING!!!!!", JSON.stringify(details));
             token = await storageService.getData(StorageKeys.userToken)
             status = MessageTypes.UPDATED;
         }
