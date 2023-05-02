@@ -132,7 +132,7 @@ function NewSuburb({
     <div className="newSuburbContainer">
       <>
         <Form.Group className="mb-3">
-          <Form.Label>Province {doneYet.current.toString()} {timerId}</Form.Label>
+          <Form.Label>Province</Form.Label>
           <Form.Select ref={provinceSelection} onChange={() => updateMunicipalityList()}>
             <option>Please select</option>
             {provinceList.current?.map((x) => {
