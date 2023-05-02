@@ -34,7 +34,7 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         if (details.reason === "install") {
             status = MessageTypes.INSTALLED;
         } else if (details.reason === "update") {
-            debugger;
+            loggingService.echo("UPDATING!!!!!",JSON.stringify(details));
             token = await storageService.getData(StorageKeys.userToken)
             status = MessageTypes.UPDATED;
         }

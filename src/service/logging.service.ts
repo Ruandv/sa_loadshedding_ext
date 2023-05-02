@@ -69,7 +69,6 @@ export default class LoggingService {
       LoggingService.storageService.getData(StorageKeys.userToken).then(t => {
         msg['userToken'] = t;
         msg['appVersion'] = LoggingService.appVersion;
-        msg['appVersion'] = LoggingService.appVersion;
         var requestMessage = {
           messageType: messageType,
           message: JSON.stringify(msg)
