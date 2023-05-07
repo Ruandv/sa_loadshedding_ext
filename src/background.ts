@@ -34,18 +34,20 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             status = MessageTypes.INSTALLED;
         } else if (details.reason === "update") {
             const newVersion = chrome.runtime.getManifest().version;
-            if (newVersion === '2.0.15' && prevVersion !== newVersion) {
-                storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
-                storageService.saveData(StorageKeys.showWhatsNew,true)
-                var subList = await storageService.getData(StorageKeys.suburbList);
-                var newFormat = subList.map((x: any) => {
-                    return {
-                        blockId: parseInt(x.blockId),
-                        municipalityId: x.municipalityId,
-                        name: x.subName
-                    } as unknown as Suburb
-                })
-                storageService.saveData(StorageKeys.suburbList, newFormat);
+            if (prevVersion !== newVersion) {
+                if (newVersion === "2.0.17") {
+                    storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
+                    storageService.saveData(StorageKeys.showWhatsNew, true)
+                    var subList = await storageService.getData(StorageKeys.suburbList);
+                    var newFormat = subList.map((x: any) => {
+                        return {
+                            blockId: parseInt(x.blockId),
+                            municipalityId: x.municipalityId,
+                            name: x.subName
+                        } as unknown as Suburb
+                    })
+                    storageService.saveData(StorageKeys.suburbList, newFormat);
+                }
             }
             token = await storageService.getData(StorageKeys.userToken)
             status = MessageTypes.UPDATED;
