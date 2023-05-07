@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./NewSuburb.scss";
 import { Badge, Button, CloseButton, Form } from "react-bootstrap";
-import { Municipality, Suburb } from "../../../interfaces/userDetails";
+import { Municipality, Province, Suburb } from "../../../interfaces/userDetails";
 import RuanService from "../../../service/ruan.service";
 import { StorageKeys } from "../../../enums/storageKeys";
 import StorageService from "../../../service/storage.service";
@@ -21,42 +21,61 @@ function NewSuburb({
   const ruanService = RuanService.getInstance();
   const storageService = StorageService.getInstance();
   const loggingService = LoggingService.getInstance();
-  const [loading, setLoading] = useState({});
-  const selection = useRef<any>();
+  const [municipalityList, setMunicipalityList] = useState<Municipality[]>([]);
   const municipalitySelection = useRef<any>();
-  const [list, setList] = useState({} as Municipality);
+  const suburbSelection = useRef<any>();
+  const provinceSelection = useRef<any>();
+  const [searchList, setSearchList] = useState<Suburb[]>([]);
 
-  const MunicipalityList = [
-    { id: 166, name: "City of Johannesburg" },
-    { id: 167, name: "Tshwane" },
-    { id: 168, name: "Ekhuruleni" },
-  ];
-  var doneYet = useRef(true);
-  var c = 0;
-  const checkBack = () =>
-    setTimeout(function () {
+  const [doneYet, setDoneYet] = useState({ current: true });
+  const [timerId, setTimerId] = useState<any>();
+  const getRandomMessage = () => {
+    var jokes = [
+      "Why did the light bulb go to school? To get brighter!",
+      "Why did the electrician break up with his girlfriend? She was always giving him static.",
+      "Why don't electricians ever get shocked? They're always grounded.",
+      "What do you call a light bulb that doesn't work? A filament failure.",
+      "Why did the electrician go to art school? To learn how to draw circuits.",
+      "Why did the power plant go to the doctor? It had too many blackouts.",
+      "What do you call a group of electricians? A power trip.",
+      "Why did the solar panel go to outer space? To get a sun tan."
+    ]
+    const randomIndex = Math.floor(Math.random() * jokes.length);
+    return jokes[randomIndex];
+  }
+  const checkBack = () => {
+    var MytimerId = setTimeout(function () {
+      clearTimeout(timerId);
       if (doneYet.current === false) {
-        setLoading({
-          isLoading: true,
-          message: "The server is taking its time..." + c,
-        });
-        c = c + 1;
+        var msg = { isLoading: true, message: getRandomMessage() };
+        isBusyProcessing!(msg);
         checkBack();
-      } else {
-        loggingService.echo("PROCESSING DONE", undefined, undefined, "warning");
-        setLoading({ isLoading: false, message: "DONE!" });
       }
     }, 2000);
-
-  useEffect(() => {
-    isBusyProcessing!(loading);
-  }, [loading]);
+    setTimerId(MytimerId);
+  }
 
   useEffect(() => {
     if (doneYet.current === true) {
       isBusyProcessing!({ isLoading: false, message: "DONE" });
+      clearTimeout(timerId);
     }
-  }, [doneYet.current]);
+    else {
+      checkBack();
+    }
+  }, [doneYet]);
+
+  let provinceList = useRef<Province[]>([
+    { "ProvinceId": 1, "ProvinceName": "Eastern Cape", Municipalities: [] },
+    { "ProvinceId": 2, "ProvinceName": "Free State", Municipalities: [] },
+    { "ProvinceId": 3, "ProvinceName": "Gauteng", Municipalities: [] },
+    { "ProvinceId": 4, "ProvinceName": "KwaZulu-Natal", Municipalities: [] },
+    { "ProvinceId": 5, "ProvinceName": "Limpopo", Municipalities: [] },
+    { "ProvinceId": 6, "ProvinceName": "Mpumalanga", Municipalities: [] },
+    { "ProvinceId": 7, "ProvinceName": "North West", Municipalities: [] },
+    { "ProvinceId": 8, "ProvinceName": "Northern Cape", Municipalities: [] },
+    { "ProvinceId": 9, "ProvinceName": "Western Cape", Municipalities: [] }
+  ]);
 
   var removeSuburb = (x: Suburb) => {
     var c = [...suburbList!];
@@ -65,74 +84,86 @@ function NewSuburb({
 
     storageService.saveData(StorageKeys.suburbList, c);
     loggingService.LogToServer(MessageTypes.SUBURBREMOVED, {
-      suburbName: x.subName,
+      suburbName: x.name,
     });
     onSuburbListChanged(c);
   };
 
   var addSuburb = () => {
-    var mun = municipalitySelection.current;
-    var munSel = mun.selectedIndex;
-    var munOpt = mun.options[munSel];
-    var munValue = munOpt.value;
+    var munValue = municipalitySelection.current.selectedOptions[0].value;
+    var suburb = JSON.parse(suburbSelection.current.selectedOptions[0].value);
+    if (suburb) {
+      var c = [...suburbList!];
+      c.push({ blockId: suburb.blockId, name: suburb.name, municipalityId: munValue } as Suburb);
+      storageService.saveData(StorageKeys.suburbList, c);
+      loggingService.LogToServer(MessageTypes.SUBURBADDED, {
+        suburbName: suburb.name,
+      });
+      // provinceSelection.current = undefined;
 
-    var c = [...suburbList!];
-    var e = selection.current;
-    var sel = e.selectedIndex;
-    var opt = e.options[sel];
-    var curValue = opt.value;
-    var curText = opt.text;
-    c.push({ blockId: curValue, subName: curText, municipalityId: munValue });
-    storageService.saveData(StorageKeys.suburbList, c);
-    loggingService.LogToServer(MessageTypes.SUBURBADDED, {
-      suburbName: curText,
+      // municipalitySelection.current = undefined;
+      // suburbSelection.current = undefined;
+
+      onSuburbListChanged(c);
+    }
+    else {
+      console.error("Suburb not found : " + suburbSelection.current.value)
+    }
+  };
+
+  const updateMunicipalityList = async () => {
+    setDoneYet({ current: false });
+    await ruanService.getMunicipalityList(provinceSelection.current.selectedOptions[0].value).then(x => {
+      setDoneYet({ current: true });
+      provinceSelection.current.Municipalities = x;
+      setMunicipalityList(x);
     });
-    onSuburbListChanged(c);
-  };
+  }
 
-  const updateSuburbs = async (e: any) => {
-    var curValue = e.target.value;
-    doneYet.current = false;
-    const getSuburbs = async () => {
-      try {
-        setList(await ruanService.getSuburbData(curValue));
-      } catch (err) {
-        setLoading({
-          isLoading: true,
-          message: "ERROR TRYING TO RETRIEVE SUBURBS",
-        });
-      } finally {
-      }
-    };
-    getSuburbs();
-  };
+  const updateSuburbsList = () => {
+    setDoneYet({ current: false });
+    ruanService.getSuburbData(provinceSelection.current.selectedOptions[0].value, municipalitySelection.current.selectedOptions[0].value).then(x => {
+      setDoneYet({ current: true });
+      setSearchList(x.Suburbs);
+    });
+  }
 
   return (
-    <div>
+    <div className="newSuburbContainer">
       <>
         <Form.Group className="mb-3">
+          <Form.Label>Province</Form.Label>
+          <Form.Select ref={provinceSelection} onChange={() => updateMunicipalityList()}>
+            <option>Please select</option>
+            {provinceList.current?.map((x) => {
+              return <option value={x.ProvinceId}>{x.ProvinceName}</option>;
+            })}
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Municipality List</Form.Label>
-          <Form.Select ref={municipalitySelection} onChange={updateSuburbs}>
+          <Form.Select ref={municipalitySelection} onChange={() => updateSuburbsList()} >
             <option>Please select</option>
-            {MunicipalityList?.map((x) => {
-              return <option value={x.id}>{x.name}</option>;
+            {municipalityList.map((x: Municipality) => {
+              return <option value={x.Value}>{x.Text}</option>;
             })}
           </Form.Select>
         </Form.Group>
-        <Form.Group className="mb-3">
+        <Form.Group className={`mb-3`}>
           <Form.Label>Suburb List</Form.Label>
-          <Form.Select ref={selection}>
+          <Form.Select ref={suburbSelection} >
             <option>Please select</option>
-            {list?.Suburbs?.map((x) => {
-              if (list!.Suburbs!.indexOf(x) === list.Suburbs.length - 1) {
-                doneYet.current = true;
-              }
-              return <option value={x.blockId}>{x.subName}</option>;
+            {searchList.map((x: Suburb, i: number) => {
+              return <option value={JSON.stringify(x)}>{x.name}</option>;
             })}
           </Form.Select>
+          <Form.Text id="helpBlock" muted>
+            * indicates a direct eskom client.
+          </Form.Text>
         </Form.Group>
-        <Form.Group className="mb-3">
+        <Form.Group className={`mb-3`}>
           <Button
+            size="sm"
             variant="primary"
             onClick={() => {
               addSuburb();
@@ -146,7 +177,7 @@ function NewSuburb({
             return (
               <>
                 <Badge pill bg="primary">
-                  {x.subName}
+                  {x.name}
                   <CloseButton onClick={() => removeSuburb(x)} />
                 </Badge>{" "}
               </>

@@ -5,6 +5,7 @@ import { Suburb } from "./interfaces/userDetails";
 import StorageService from "./service/storage.service";
 import { StorageKeys } from "./enums/storageKeys";
 import { MessageTypes } from "./enums/messageTypes";
+import RuanService from "./service/ruan.service";
 
 const eskomapi = eskomApi.getInstance();
 var loggingService = LoggingService.getInstance();
@@ -27,17 +28,30 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         let status = "existing";
         const prevVersion = details.previousVersion ? details.previousVersion : '';
         const timestamp = new Date().toLocaleString();
-        let newVersion = prevVersion;
-        console.log(newVersion);
         var token = getRandomToken();
 
         if (details.reason === "install") {
             status = MessageTypes.INSTALLED;
         } else if (details.reason === "update") {
+            const newVersion = chrome.runtime.getManifest().version;
+            if (prevVersion !== newVersion) {
+                if (newVersion === "2.0.17") {
+                    storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
+                    storageService.saveData(StorageKeys.showWhatsNew, true)
+                    var subList = await storageService.getData(StorageKeys.suburbList);
+                    var newFormat = subList.map((x: any) => {
+                        return {
+                            blockId: parseInt(x.blockId),
+                            municipalityId: x.municipalityId,
+                            name: x.subName
+                        } as unknown as Suburb
+                    })
+                    storageService.saveData(StorageKeys.suburbList, newFormat);
+                }
+            }
             token = await storageService.getData(StorageKeys.userToken)
             status = MessageTypes.UPDATED;
         }
-
         await storageService.saveData(StorageKeys.userToken, token)
         loggingService.LogToServer(status as MessageTypes, { message: status });
         chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
@@ -48,7 +62,6 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             storageService
                 .saveData(StorageKeys.suburbList, [] as Array<Suburb>);
             storageService.saveData(StorageKeys.defaultDays, 5);
-            loggingService.echo(`Created SyncStatus alarm`, null, null, "success")
         }
         else {
             storageService.saveData(StorageKeys.lastUpdated, timestamp)

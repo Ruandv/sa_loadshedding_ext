@@ -6,7 +6,7 @@ export default class LoggingService {
   private static service: LoggingService;
   private static storageService: StorageService;
   private static appVersion: string;
-  private static baseUrl = "https://eskom-calendar-api.azurewebsites.net/api/Logging";
+  private static baseUrl = "https://eskom-calendar-api-za.azurewebsites.net/api/Logging";
   //private static baseUrl = "https://localhost:44373/api/logging";
   public static getInstance() {
     if (!this.service) {
@@ -69,12 +69,10 @@ export default class LoggingService {
       LoggingService.storageService.getData(StorageKeys.userToken).then(t => {
         msg['userToken'] = t;
         msg['appVersion'] = LoggingService.appVersion;
-        msg['appVersion'] = LoggingService.appVersion;
         var requestMessage = {
           messageType: messageType,
           message: JSON.stringify(msg)
         }
-        this.echo(JSON.stringify(requestMessage))
         try {
           const loggingRequest = new Request(`${LoggingService.baseUrl}`, {
             method: 'Post',

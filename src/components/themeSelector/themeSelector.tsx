@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useContext } from "react";
-import { ThemeContext, ThemeSelection } from "../../providers/ThemeProvider";
+import { ThemeContext } from "../../providers/ThemeProvider";
 import "./themeSelector.scss";
 
 export default function ThemeSelector() {

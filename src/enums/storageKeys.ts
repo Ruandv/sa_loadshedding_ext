@@ -7,4 +7,5 @@ export enum StorageKeys {
     "defaultDays" = "defaultDays",
     "userToken" = "userToken",
     "darkMode" = "darkMode",
+    "showWhatsNew" = 'showWhatsNew',
 }

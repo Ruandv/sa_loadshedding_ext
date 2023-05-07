@@ -5,6 +5,7 @@ import {
   InputGroup,
   Row,
   Tab,
+  Card,
   Tabs,
   Col,
   Container,
@@ -26,24 +27,38 @@ function App() {
   const [message, setMessage] = useState("Please wait...");
   const [lastSelectedTab, setLastSelectedTab] = useState<string>();
   const [processing, setProcessing] = useState<boolean>(false);
+  const [showWhatsNew, setShowWhatsNew] = useState<boolean>(false);
   const loggingService = LoggingService.getInstance();
   const storageService = StorageService.getInstance();
   const days = useRef(5);
   const theme = useContext(ThemeContext);
+  var commitToData = async () => {
+    var subList = await storageService
+      .getData(StorageKeys.suburbList);
+    setSuburbList(subList);
+
+    var lastSelectedKey = await storageService.getData(StorageKeys.lastSelectedTab);
+    setKey(lastSelectedKey);
+    setShowWhatsNew(await storageService.getData(StorageKeys.showWhatsNew));
+    var defaultDaysToShow = await storageService.getData(StorageKeys.defaultDays);
+    days.current = defaultDaysToShow;
+  };
+
   useEffect(() => {
-    storageService
-      .getData(StorageKeys.suburbList)
-      .then((x) => setSuburbList(x));
-    storageService.getData(StorageKeys.currentStage).then((x) => {
-      setStage(x);
+
+    storageService.getData(StorageKeys.currentStage).then(level => {
+      setStage(level);
+      commitToData();
     });
-    storageService.getData(StorageKeys.lastSelectedTab).then((x) => {
-      setKey(x);
-    });
-    storageService
-      .getData(StorageKeys.defaultDays)
-      .then((x) => (days.current = x));
+
+
   }, []);
+
+  useEffect(() => {
+    setSuburbList([]);
+    commitToData();
+
+  }, [stage]);
 
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
@@ -51,9 +66,8 @@ function App() {
     loggingService.LogToServer(MessageTypes.SUBURBVIEWED, { suburbName: x });
   };
   const exportSettings = async () => {
-    let _settings = JSON.stringify(await storageService.exportData(), null, 4); //indentation in json format, human readable
+    let _settings = JSON.stringify(await storageService.exportData(), null, 4);
 
-    debugger;
     let link = document.createElement('a'),
       blob = new Blob([_settings], { type: 'text/json' }),
       name = 'Eskom-Service-Settings.json',
@@ -78,7 +92,10 @@ function App() {
         return "primary";
     }
   };
-
+  const closeWhatsNew = async () => {
+    storageService.saveData(StorageKeys.showWhatsNew, false);
+    setShowWhatsNew(false);
+  }
   return (
     <div className={`App`} id={theme.selectedTheme}>
       <div
@@ -99,7 +116,7 @@ function App() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  {Array.from({ length: 7 }).map((_, idx) => {
+                  {Array.from({ length: 8 }).map((_, idx) => {
                     return (
                       <Dropdown.Item eventKey={idx + 1}>
                         {idx + 1}
@@ -111,14 +128,6 @@ function App() {
             </InputGroup>
           </Col>
           <Col>
-            <Button
-              variant="primary"
-              onClick={() => {
-                exportSettings();
-              }}
-            >
-              Export
-            </Button>
           </Col>
           <Col style={{ display: "flex", justifyContent: "end" }}>
             <ThemeSelector></ThemeSelector>
@@ -138,22 +147,41 @@ function App() {
               }}
               className="mb-3"
             >
+              {(showWhatsNew === true || showWhatsNew === undefined) ? <Tab eventKey={'whatsNew'} title="What's new!!">
+                <p>
+                <Card>
+                  <Card.Header>
+                    WHAT IS NEW
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Text><ul>
+                      <li>Eskom client now part of the app</li>
+                      <li>New suburbs available</li>
+                      <li>Allow Export of your settings</li>
+                    </ul></Card.Text>
+                  </Card.Body>
+                </Card>
+                </p>
+                  <Button onClick={closeWhatsNew}>Close</Button>
+              </Tab> : ''}
+
               {suburbList?.map((x: Suburb) => {
                 return (
-                  <Tab eventKey={x.subName} title={x.subName}>
-                    <StageInfo
-                      suburb={x}
-                      stage={stage ? stage : 6}
-                      onIsBusyChanged={(data) => {
-                        setMessage(data.message);
-                        setProcessing(data.isLoading);
-                      }}
-                      days={days.current}
-                    ></StageInfo>
+                  <Tab eventKey={x.name} title={x.name}>
+                    {stage &&
+                      <StageInfo
+                        suburb={x}
+                        stage={stage ? stage : 6}
+                        onIsBusyChanged={(data) => {
+                          setMessage(data.message);
+                          setProcessing(data.isLoading);
+                        }}
+                        days={days.current}
+                      ></StageInfo>}
                   </Tab>
                 );
               })}
-              <Tab eventKey={"newSub"} title={`+`}>
+              <Tab eventKey={"newSub"} title={`Settings`}>
                 <NewSuburb
                   suburbList={suburbList!}
                   onSuburbListChanged={(e) => setSuburbList(e)}
@@ -162,12 +190,27 @@ function App() {
                     setMessage(data.message);
                   }}
                 ></NewSuburb>
+                <Row>
+                  <Col className="footer">
+                    <a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button>
+                    </a>
+                  </Col>
+                  <Col className="footer">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      onClick={() => {
+                        exportSettings();
+                      }}
+                    >
+                      Export settings
+                    </Button>
+                  </Col>
+
+                </Row>
               </Tab>
             </Tabs>
           </Col>
-        </Row>
-        <Row>
-          <Col className="footer"><a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button></a></Col>
         </Row>
       </Container>
     </div>
