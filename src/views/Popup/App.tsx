@@ -128,7 +128,6 @@ function App() {
             </InputGroup>
           </Col>
           <Col>
-
           </Col>
           <Col style={{ display: "flex", justifyContent: "end" }}>
             <ThemeSelector></ThemeSelector>
