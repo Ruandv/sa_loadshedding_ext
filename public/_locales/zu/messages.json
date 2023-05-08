@@ -1,0 +1,36 @@
+{
+  "appName": {
+    "message": "I-Eskom Loadshedding",
+    "description": "The name of the application"
+  },
+  "appDesc": {
+    "message": "Ukukhombisa Isitoreji se-Eskom Loadshedding eNingizimu Afrika",
+    "description": "A short description of the application"
+  },
+  "mySetting": {
+    "message": "Izilungiselelo",
+    "description": "Settings"
+  },
+  "add": {
+    "message": "Faka"
+  },
+  "defaultSelector": {
+    "message": "Sicela ukhethe"
+  },
+  "provinceList": {
+    "message": "Ilisti ye-Province"
+  },
+  "municipalityList": {
+    "message": "Ilisti yeMunicipality"
+  },
+  "suburbList": {
+    "message": "Ilisti yeSuburb"
+  },
+  "suburbListExplainer": {
+    "message": "Kuvakashela umsebenzi wokuqhuba komphakathi ka-Eskom.",
+    "description": "Explain to the user what the * next to a suburb means"
+  },
+  "exportSettings": {
+    "message": "Phawula izilungiselelo"
+  }
+}
