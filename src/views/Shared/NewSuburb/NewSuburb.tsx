@@ -132,33 +132,33 @@ function NewSuburb({
     <div className="newSuburbContainer">
       <>
         <Form.Group className="mb-3">
-          <Form.Label>Province</Form.Label>
+          <Form.Label>{chrome.i18n.getMessage('provinceList')}</Form.Label>
           <Form.Select ref={provinceSelection} onChange={() => updateMunicipalityList()}>
-            <option>Please select</option>
+            <option>{chrome.i18n.getMessage('defaultSelector')}</option>
             {provinceList.current?.map((x) => {
               return <option value={x.ProvinceId}>{x.ProvinceName}</option>;
             })}
           </Form.Select>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Municipality List</Form.Label>
+          <Form.Label>{chrome.i18n.getMessage('municipalityList')}</Form.Label>
           <Form.Select ref={municipalitySelection} onChange={() => updateSuburbsList()} >
-            <option>Please select</option>
+            <option>{chrome.i18n.getMessage('defaultSelector')}</option>
             {municipalityList.map((x: Municipality) => {
               return <option value={x.Value}>{x.Text}</option>;
             })}
           </Form.Select>
         </Form.Group>
         <Form.Group className={`mb-3`}>
-          <Form.Label>Suburb List</Form.Label>
+          <Form.Label>{chrome.i18n.getMessage('suburbList')}</Form.Label>
           <Form.Select ref={suburbSelection} >
-            <option>Please select</option>
+            <option>{chrome.i18n.getMessage('defaultSelector')}</option>
             {searchList.map((x: Suburb, i: number) => {
               return <option value={JSON.stringify(x)}>{x.name}</option>;
             })}
           </Form.Select>
           <Form.Text id="helpBlock" muted>
-            * indicates a direct eskom client.
+            * {chrome.i18n.getMessage('suburbListExplainer')}
           </Form.Text>
         </Form.Group>
         <Form.Group className={`mb-3`}>
@@ -169,7 +169,7 @@ function NewSuburb({
               addSuburb();
             }}
           >
-            Add
+            {chrome.i18n.getMessage('add')}
           </Button>
         </Form.Group>
         <Form.Group className="mb-3">

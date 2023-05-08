@@ -35,18 +35,9 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         } else if (details.reason === "update") {
             const newVersion = chrome.runtime.getManifest().version;
             if (prevVersion !== newVersion) {
-                if (newVersion === "2.0.17") {
-                    storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
-                    storageService.saveData(StorageKeys.showWhatsNew, true)
-                    var subList = await storageService.getData(StorageKeys.suburbList);
-                    var newFormat = subList.map((x: any) => {
-                        return {
-                            blockId: parseInt(x.blockId),
-                            municipalityId: x.municipalityId,
-                            name: x.subName
-                        } as unknown as Suburb
-                    })
-                    storageService.saveData(StorageKeys.suburbList, newFormat);
+                storageService.saveData(StorageKeys.showWhatsNew, true)
+                storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
+                if (newVersion === "2.0.18") {
                 }
             }
             token = await storageService.getData(StorageKeys.userToken)

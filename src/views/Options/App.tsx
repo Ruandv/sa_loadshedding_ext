@@ -41,7 +41,7 @@ function App() {
         <Form.Group className="mb-3">
           <Form.Label>Days to show</Form.Label>
           <Form.Select ref={daysSelection} onChange={saveDays}>
-            <option>Please select</option>
+            <option>{chrome.i18n.getMessage('defaultSelector')}</option>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((x) => {
               return (
                 <option

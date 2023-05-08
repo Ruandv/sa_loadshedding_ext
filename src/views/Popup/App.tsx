@@ -59,7 +59,6 @@ function App() {
     commitToData();
 
   }, [stage]);
-
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
     setLastSelectedTab(x);
@@ -155,9 +154,7 @@ function App() {
                   </Card.Header>
                   <Card.Body>
                     <Card.Text><ul>
-                      <li>Eskom client now part of the app</li>
-                      <li>New suburbs available</li>
-                      <li>Allow Export of your settings</li>
+                      <li>Added browser localization for afrikaans and english</li>
                     </ul></Card.Text>
                   </Card.Body>
                 </Card>
@@ -181,7 +178,7 @@ function App() {
                   </Tab>
                 );
               })}
-              <Tab eventKey={"newSub"} title={`Settings`}>
+              <Tab eventKey={"newSub"} title={chrome.i18n.getMessage('mySetting')}>
                 <NewSuburb
                   suburbList={suburbList!}
                   onSuburbListChanged={(e) => setSuburbList(e)}
@@ -203,7 +200,7 @@ function App() {
                         exportSettings();
                       }}
                     >
-                      Export settings
+                      {chrome.i18n.getMessage('exportSettings')}
                     </Button>
                   </Col>
 

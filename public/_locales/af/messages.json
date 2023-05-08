@@ -1,0 +1,36 @@
+{
+  "appName": {
+    "message": "Eskom Beurtkrag",
+    "description": "The name of the application"
+  },
+  "appDesc": {
+    "message": "Loadshedding-uitbreiding vir Suid-Afrika",
+    "description": "A short description of the application"
+  },
+  "mySetting": {
+    "message": "Instellings",
+    "description": "Settings"
+  },
+  "add": {
+    "message": "Voeg by"
+  },
+  "defaultSelector": {
+    "message": "Kies asseblief"
+  },
+  "provinceList": {
+    "message": "Provinsie lys"
+  },
+  "municipalityList": {
+    "message": "Munisipaliteit lys"
+  },
+  "suburbList": {
+    "message": "Voorstad lys"
+  },
+  "suburbListExplainer": {
+    "message": "dui op 'n direkte Eskom-kliënt.",
+    "description": "Explain to the user what the * next to a suburb means"
+  },
+  "exportSettings": {
+    "message": "Voer instellings uit"
+  }
+}

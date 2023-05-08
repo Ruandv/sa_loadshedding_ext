@@ -1,0 +1,36 @@
+{
+  "appName": {
+    "message": "Eskom Loadshedding",
+    "description": "The name of the application"
+  },
+  "appDesc": {
+    "message": "Loadshedding extension for South Africa",
+    "description": "A short description of the application"
+  },
+  "mySetting": {
+    "message": "Settings",
+    "description": "Settings"
+  },
+  "add": {
+    "message": "Add"
+  },
+  "defaultSelector": {
+    "message": "Please select"
+  },
+  "provinceList": {
+    "message": "Province list"
+  },
+  "municipalityList": {
+    "message": "Municipality list"
+  },
+  "suburbList": {
+    "message": "Suburb list"
+  },
+  "suburbListExplainer": {
+    "message": "indicates a direct eskom client.",
+    "description": "Explain to the user what the * next to a suburb means"
+  },
+  "exportSettings": {
+    "message": "Export settings"
+  }
+}

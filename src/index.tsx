@@ -5,7 +5,6 @@ import "bootstrap/scss/bootstrap.scss";
 import "./custom.scss";
 import "./index.scss";
 import { ThemeProvider } from "./providers/ThemeProvider";
-
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
