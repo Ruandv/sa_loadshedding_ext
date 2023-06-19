@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
 import { StorageKeys } from "../enums/storageKeys";
-import LoggingService from "../service/logging.service";
 import StorageService from "../service/storage.service";
 
 export enum ThemeColours {
@@ -17,7 +16,6 @@ export interface ThemeState {
 export const ThemeContext = createContext(null as any);
 
 export function ThemeProvider(props: any) {
-  const loggingService = LoggingService.getInstance();
   const storageService = StorageService.getInstance();
 
   const [theme, setTheme] = useState<ThemeColours>();

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./NewSuburb.scss";
 import { Badge, Button, CloseButton, Form } from "react-bootstrap";
 import { Municipality, Province, Suburb } from "../../../interfaces/userDetails";
-import RuanService from "../../../service/ruan.service";
+import SaLoadsheddingService from "../../../service/sa-loadshedding.service";
 import { StorageKeys } from "../../../enums/storageKeys";
 import StorageService from "../../../service/storage.service";
 import LoggingService from "../../../service/logging.service";
@@ -18,7 +18,7 @@ function NewSuburb({
   onSuburbListChanged,
   onIsBusyChanged: isBusyProcessing,
 }: NewSuburbProps) {
-  const ruanService = RuanService.getInstance();
+  const saLoadsheddingService = SaLoadsheddingService.getInstance();
   const storageService = StorageService.getInstance();
   const loggingService = LoggingService.getInstance();
   const [municipalityList, setMunicipalityList] = useState<Municipality[]>([]);
@@ -113,7 +113,7 @@ function NewSuburb({
 
   const updateMunicipalityList = async () => {
     setDoneYet({ current: false });
-    await ruanService.getMunicipalityList(provinceSelection.current.selectedOptions[0].value).then(x => {
+    await saLoadsheddingService.getMunicipalityList(provinceSelection.current.selectedOptions[0].value).then(x => {
       setDoneYet({ current: true });
       provinceSelection.current.Municipalities = x;
       setMunicipalityList(x);
@@ -122,7 +122,7 @@ function NewSuburb({
 
   const updateSuburbsList = () => {
     setDoneYet({ current: false });
-    ruanService.getSuburbData(provinceSelection.current.selectedOptions[0].value, municipalitySelection.current.selectedOptions[0].value).then(x => {
+    saLoadsheddingService.getSuburbData(provinceSelection.current.selectedOptions[0].value, municipalitySelection.current.selectedOptions[0].value).then(x => {
       setDoneYet({ current: true });
       setSearchList(x.Suburbs);
     });

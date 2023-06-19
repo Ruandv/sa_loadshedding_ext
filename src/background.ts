@@ -5,7 +5,6 @@ import { Suburb } from "./interfaces/userDetails";
 import StorageService from "./service/storage.service";
 import { StorageKeys } from "./enums/storageKeys";
 import { MessageTypes } from "./enums/messageTypes";
-import RuanService from "./service/ruan.service";
 
 const eskomapi = eskomApi.getInstance();
 var loggingService = LoggingService.getInstance();
@@ -37,7 +36,7 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             if (prevVersion !== newVersion) {
                 storageService.saveData(StorageKeys.showWhatsNew, true)
                 storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
-                if (newVersion === "2.0.18") {
+                if (newVersion === "2.0.19") {
                 }
             }
             token = await storageService.getData(StorageKeys.userToken)

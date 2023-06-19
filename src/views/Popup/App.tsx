@@ -154,7 +154,9 @@ function App() {
                   </Card.Header>
                   <Card.Body>
                     <Card.Text><ul>
-                      <li>Added browser localization for afrikaans and english</li>
+                      <li>Renamed the application</li>
+                      <li>Updated api Url</li>
+                      <li>Removed options screen</li>
                     </ul></Card.Text>
                   </Card.Body>
                 </Card>
@@ -189,7 +191,7 @@ function App() {
                 ></NewSuburb>
                 <Row>
                   <Col className="footer">
-                    <a target="_blank" href='https://github.com/Ruandv/Chrome_Eskom_Extension_Typescript/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button>
+                    <a target="_blank" href='https://github.com/Ruandv/sa_loadshedding_ext/issues/new/choose' rel="noreferrer"><button type="button" className="btn btn-sm btn-primary">Report an issue</button>
                     </a>
                   </Col>
                   <Col className="footer">

@@ -1,11 +1,11 @@
 import { Municipality, StageInfoModel } from "../interfaces/userDetails";
 import LoggingService from './logging.service';
-export default class RuanService {
+export default class SaLoadsheddingService {
 
-    private static service: RuanService;
+    private static service: SaLoadsheddingService;
     private loggingService = LoggingService.getInstance();
 
-    private baseUrl = "https://eskom-calendar-api-za.azurewebsites.net/api/Eskom";
+    private baseUrl = "https://sa-loadshedding-api.azurewebsites.net/api/Eskom";
     //private baseUrl = "https://localhost:44373/api/Eskom";
 
     private myHeaders = new Headers({
@@ -113,7 +113,7 @@ export default class RuanService {
 
     public static getInstance() {
         if (!this.service) {
-            this.service = new RuanService();
+            this.service = new SaLoadsheddingService();
         }
 
         return this.service;

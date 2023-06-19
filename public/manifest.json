@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "__MSG_appName__",
     "description": "__MSG_appDesc__",
-    "version": "2.0.18",
+    "version": "2.0.19",
     "default_locale": "en",
     "background": {
         "service_worker": "static/js/background.js"
@@ -23,7 +23,7 @@
             "128": "images/get_started128.png"
         },
         "default_popup": "popup.html",
-        "default_title": "COJ Loadshedding"
+        "default_title": "SA Loadshedding"
     },
     "permissions": [
         "storage",
@@ -31,10 +31,10 @@
     ],
     "host_permissions": [
         "https://loadshedding.eskom.co.za/*",
-        "https://eskom-calendar-api-za.azurewebsites.net/*"
+        "https://sa-loadshedding-api.azurewebsites.net/*"
     ],
     "options_ui": {
-        "page": "options.html",
+        "page": "popup.html",
         "open_in_tab": false
     },
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjQhQWeY7JxuSgD0PTt1nGpz6/ZWCBHhlLgL8dRjSFlASKQtFhoBQZ0KtP1LJrsVr+lNi/iuavW+Ew+ySBr1YK07LWDo/KqB77d2EQpBpUkjOXBNUolBlEDhdmbldUtgGff1sgtMYpI8VcCpY78PKjx4WOJMZmgbJkJSkFufh1/AMsEfQLjk+d+3obqNvt8fEfYOGa+uktnpKuUVHkbNHQWsAmETqVWUodZFJ89MbXvUSjLjRi4N8hOhfLfMw5Tyg71uV6j/Xn39U3T8Gh62wxzZOn0ky+tIDSQenrq6I4Tb2Zg4U4aW9mWJo4+PoHIF8zJVCJ5/AdpzY+lWPyH2UCwIDAQAB"

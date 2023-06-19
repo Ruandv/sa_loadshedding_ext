@@ -6,7 +6,7 @@ export default class LoggingService {
   private static service: LoggingService;
   private static storageService: StorageService;
   private static appVersion: string;
-  private static baseUrl = "https://eskom-calendar-api-za.azurewebsites.net/api/Logging";
+  private static baseUrl = "https://sa-loadshedding-api.azurewebsites.net/api/Logging";
   //private static baseUrl = "https://localhost:44373/api/logging";
   public static getInstance() {
     if (!this.service) {

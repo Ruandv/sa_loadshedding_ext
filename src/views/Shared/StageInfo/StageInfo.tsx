@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./StageInfo.scss";
 import { Row, Col, Card } from "react-bootstrap";
 import { StageInfoModel, Suburb } from "../../../interfaces/userDetails";
-import RuanService from "../../../service/ruan.service";
+import SaLoadsheddingService from "../../../service/sa-loadshedding.service";
 
 export interface StageInfoProps {
   suburb: Suburb;
@@ -16,7 +16,7 @@ function StageInfo({
   onIsBusyChanged: isBusyProcessing,
   days,
 }: StageInfoProps) {
-  const ruanService = RuanService.getInstance();
+  const saLoadsheddingService = SaLoadsheddingService.getInstance();
   const [scheduleData, setScheduleData] = useState<StageInfoModel[]>();
   const [loading, setLoading] = useState({});
   var doneYet = useRef(true);
@@ -53,7 +53,7 @@ function StageInfo({
     doneYet.current = false;
     const getDataRes = async () => {
       try {
-        var res = await ruanService.getSchedule(
+        var res = await saLoadsheddingService.getSchedule(
           suburb.blockId,
           stage,
           !days ? 5 : days,

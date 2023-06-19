@@ -27,17 +27,6 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Nintex npm package
-This project makes use of nintex npm packages that needs authentication. 
-If you get this message then you'd need to authenticate : 
-![alt text](./images/vsts_err.png)
-
-### To authenticate you need to : 
-* Run `npm install -g vsts-npm-auth` to install the package globally
-* Generate a token using the local .npmrc file by running `vsts-npm-auth -config .npmrc`
-* Install the new packages using `npm install`
-
-
 ## Load the extension without publishing it to the chrome store.
 
 To see your extension in the browser you need to: 
@@ -50,11 +39,3 @@ To see your extension in the browser you need to:
 
 ## Colaborators
 - Ruan de Villiers
-- Morne Swanepoel
-- Carien Benadie
-- Andrew More
-- Jon Krueger
-- Jonathan Butler
-- Claudine Van Graan
-- Keryn Roos
-- Lyn Hall
