@@ -20,6 +20,7 @@ import NewSuburb from "../Shared/NewSuburb/NewSuburb";
 import { MessageTypes } from "../../enums/messageTypes";
 import { ThemeContext } from "../../providers/ThemeProvider";
 import ThemeSelector from "../../components/themeSelector/themeSelector";
+import SaLoadsheddingService from "../../service/sa-loadshedding.service";
 
 function App() {
   const [suburbList, setSuburbList] = useState<Array<Suburb>>([]);
@@ -30,6 +31,7 @@ function App() {
   const [showWhatsNew, setShowWhatsNew] = useState<boolean>(false);
   const loggingService = LoggingService.getInstance();
   const storageService = StorageService.getInstance();
+  const saLoadsheddingService = SaLoadsheddingService.getInstance();
   const days = useRef(5);
   const theme = useContext(ThemeContext);
   var commitToData = async () => {
@@ -43,12 +45,23 @@ function App() {
     var defaultDaysToShow = await storageService.getData(StorageKeys.defaultDays);
     days.current = defaultDaysToShow;
   };
+  var getDataFromServer = async()=>{
+    var serverStage = await saLoadsheddingService.getStatus()
+    storageService.saveData(StorageKeys.currentStage,serverStage);
+    setStage(serverStage)
+    commitToData();
+  }
 
   useEffect(() => {
-
     storageService.getData(StorageKeys.currentStage).then(level => {
-      setStage(level);
-      commitToData();
+      if(level === "NaN"){
+        getDataFromServer()
+      }
+      else
+      {
+        setStage(level);
+        commitToData();
+      }
     });
 
 
@@ -59,6 +72,7 @@ function App() {
     commitToData();
 
   }, [stage]);
+
   const setKey = (x: any) => {
     storageService.saveData(StorageKeys.lastSelectedTab, x);
     setLastSelectedTab(x);
@@ -154,9 +168,7 @@ function App() {
                   </Card.Header>
                   <Card.Body>
                     <Card.Text><ul>
-                      <li>Renamed the application</li>
-                      <li>Updated api Url</li>
-                      <li>Removed options screen</li>
+                      <li>Stability changes</li>
                     </ul></Card.Text>
                   </Card.Body>
                 </Card>

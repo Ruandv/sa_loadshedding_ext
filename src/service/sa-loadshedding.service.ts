@@ -111,6 +111,36 @@ export default class SaLoadsheddingService {
         }
     }
 
+    public getStatus = async(): Promise<number>=>{
+        try {
+            const getStatusRequest = new Request(`${this.baseUrl}/GetStatus`, {
+                method: 'Get',
+                mode: 'cors',
+                headers: this.myHeaders,
+                cache: 'default',
+                body: undefined
+            })
+            debugger;
+            return fetch(getStatusRequest)
+                .then(x => {
+                    debugger;
+                    return x.json()
+                })
+                .then(d => {
+                    return d;
+                })
+                .catch((err) => {
+                    console.error("FETCH ERROR : " + err.message)
+                    this.loggingService.echo("Fetch Error", err.message, null, "error")
+                    throw err;
+                });
+        } catch (ex) {
+            debugger;
+            this.loggingService.echo("Fetch Error", (ex as any).message, null, "error")
+            throw ex;
+        }
+    }
+
     public static getInstance() {
         if (!this.service) {
             this.service = new SaLoadsheddingService();

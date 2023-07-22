@@ -5,8 +5,10 @@ import { Suburb } from "./interfaces/userDetails";
 import StorageService from "./service/storage.service";
 import { StorageKeys } from "./enums/storageKeys";
 import { MessageTypes } from "./enums/messageTypes";
+import SaLoadsheddingService from "./service/sa-loadshedding.service";
 
 const eskomapi = eskomApi.getInstance();
+const saLoadshedding = SaLoadsheddingService.getInstance();
 var loggingService = LoggingService.getInstance();
 var storageService = StorageService.getInstance();
 
@@ -36,7 +38,7 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
             if (prevVersion !== newVersion) {
                 storageService.saveData(StorageKeys.showWhatsNew, true)
                 storageService.saveData(StorageKeys.lastSelectedTab, "whatsNew");
-                if (newVersion === "2.0.19") {
+                if (newVersion === "2.0.20") {
                 }
             }
             token = await storageService.getData(StorageKeys.userToken)
@@ -56,9 +58,17 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         else {
             storageService.saveData(StorageKeys.lastUpdated, timestamp)
         }
-
         await eskomapi.getStatus().then((status) => {
-            storageService.saveData(StorageKeys.currentStage, status)
+            if (status === 'NaN') {
+                //go to the server and see if you can get the stage from there.
+                saLoadshedding.getStatus().then(x => {
+                    storageService.saveData(StorageKeys.currentStage, x)
+                    updateIcon(x);
+                })
+            }
+            else {
+                storageService.saveData(StorageKeys.currentStage, status)
+            }
         }).catch(err => loggingService.echo(err.message, null, null, "error"))
     });
 }
@@ -67,8 +77,17 @@ chrome.alarms.onAlarm.addListener((x) => {
     switch (x.name) {
         case "SyncStatus":
             eskomapi.getStatus().then((status) => {
-                storageService.saveData(StorageKeys.currentStage, status)
-                updateIcon(status);
+                if (status === 'NaN') {
+                    //go to the server and see if you can get the stage from there.
+                    saLoadshedding.getStatus().then(x => {
+                        storageService.saveData(StorageKeys.currentStage, x)
+                        updateIcon(status);
+                    })
+                }
+                else {
+                    storageService.saveData(StorageKeys.currentStage, status)
+                    updateIcon(status);
+                }
             }).catch(err => console.error(err))
             break;
         default:
