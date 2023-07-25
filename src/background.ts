@@ -79,10 +79,10 @@ chrome.alarms.onAlarm.addListener((x) => {
             eskomapi.getStatus().then((status) => {
                 if (status === 'NaN') {
                     //go to the server and see if you can get the stage from there.
-                    saLoadshedding.getStatus().then(x => {
-                        storageService.saveData(StorageKeys.currentStage, x)
-                        updateIcon(status);
-                    })
+                    // saLoadshedding.getStatus().then(x => {
+                    //     storageService.saveData(StorageKeys.currentStage, x)
+                    //     updateIcon(status);
+                    // })
                 }
                 else {
                     storageService.saveData(StorageKeys.currentStage, status)

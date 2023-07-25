@@ -22,7 +22,7 @@ export function ThemeProvider(props: any) {
 
   const toggleTheme = () => {
     setTheme((curr: ThemeColours | undefined) =>
-      curr === ThemeColours.LIGHTMODE
+      (!curr || curr === ThemeColours.LIGHTMODE)
         ? ThemeColours.DARKMODE
         : ThemeColours.LIGHTMODE
     );
@@ -33,7 +33,9 @@ export function ThemeProvider(props: any) {
   }, [theme]);
 
   useEffect(() => {
-    storageService.getData(StorageKeys.darkMode).then((x) => setTheme(x));
+    storageService.getData(StorageKeys.darkMode).then((x) => {
+      setTheme(x);
+    });
   }, []);
 
   return (
