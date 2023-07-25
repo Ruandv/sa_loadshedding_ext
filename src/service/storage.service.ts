@@ -19,8 +19,12 @@ export default class StorageService {
         await this.printAllData();
     }
 
-    public getData = async (key: StorageKeys) => {
+    public getData = async (key: StorageKeys, defaultValue?: any) => {
         var res = await chrome.storage.local.get(key);
+        if (!defaultValue && (!res || res === null)) {
+            res = defaultValue;
+        }
+
         this.loggingService.echo(`Getting data for ${key}`, key, res)
         return res[key];
     }

@@ -36,7 +36,7 @@ function App() {
   const theme = useContext(ThemeContext);
   var commitToData = async () => {
     var subList = await storageService
-      .getData(StorageKeys.suburbList);
+      .getData(StorageKeys.suburbList,[]);
     setSuburbList(subList);
 
     var lastSelectedKey = await storageService.getData(StorageKeys.lastSelectedTab);

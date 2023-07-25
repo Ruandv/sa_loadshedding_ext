@@ -13,7 +13,7 @@ function App() {
   const [suburbListData, setSuburbListData] = useState<Array<Suburb>>();
   const storageService = StorageService.getInstance();
   useEffect(() => {
-    storageService.getData(StorageKeys.suburbList).then((x) => {
+    storageService.getData(StorageKeys.suburbList,[]).then((x) => {
       setSuburbListData(x);
     });
     storageService.getData(StorageKeys.defaultDays).then((x) => {
