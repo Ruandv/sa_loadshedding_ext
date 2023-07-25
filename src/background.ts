@@ -47,7 +47,7 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         await storageService.saveData(StorageKeys.userToken, token)
         loggingService.LogToServer(status as MessageTypes, { message: status });
         chrome.runtime.setUninstallURL(`${LoggingService.getBase()}?userToken=${token}`);
-        chrome.alarms.create("SyncStatus", { periodInMinutes: 1 })
+        chrome.alarms.create("SyncStatus", { periodInMinutes: 20 })
         if (status === MessageTypes.INSTALLED) {
             chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
             storageService.saveData(StorageKeys.installedDate, timestamp)
@@ -60,11 +60,11 @@ if (typeof chrome.runtime.onInstalled !== 'undefined') {
         }
         await eskomapi.getStatus().then((status) => {
             if (status === 'NaN') {
-                //go to the server and see if you can get the stage from there.
-                saLoadshedding.getStatus().then(x => {
-                    storageService.saveData(StorageKeys.currentStage, x)
-                    updateIcon(x);
-                })
+                //     //go to the server and see if you can get the stage from there.
+                //     saLoadshedding.getStatus().then(x => {
+                //         storageService.saveData(StorageKeys.currentStage, x)
+                //         updateIcon(x);
+                //     })
             }
             else {
                 storageService.saveData(StorageKeys.currentStage, status)

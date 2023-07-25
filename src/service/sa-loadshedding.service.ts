@@ -6,14 +6,14 @@ export default class SaLoadsheddingService {
     private loggingService = LoggingService.getInstance();
 
     private baseUrl = "https://sa-loadshedding-api.azurewebsites.net/api/Eskom";
-    //private baseUrl = "https://localhost:44373/api/Eskom";
+    // private baseUrl = "https://localhost:44373/api/Eskom";
 
     private myHeaders = new Headers({
         //"accept": "application/json",
         'Access-Control-Allow-Origin': "*",
         'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-        'Key': chrome.runtime.getManifest().key!,// "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjQhQWeY7JxuSgD0PTt1nGpz6/ZWCBHhlLgL8dRjSFlASKQtFhoBQZ0KtP1LJrsVr+lNi/iuavW+Ew+ySBr1YK07LWDo/KqB77d2EQpBpUkjOXBNUolBlEDhdmbldUtgGff1sgtMYpI8VcCpY78PKjx4WOJMZmgbJkJSkFufh1/AMsEfQLjk+d+3obqNvt8fEfYOGa+uktnpKuUVHkbNHQWsAmETqVWUodZFJ89MbXvUSjLjRi4N8hOhfLfMw5Tyg71uV6j/Xn39U3T8Gh62wxzZOn0ky+tIDSQenrq6I4Tb2Zg4U4aW9mWJo4+PoHIF8zJVCJ5/AdpzY+lWPyH2UCwIDAQAB",
+        'Token': navigator.userAgent.toString(),
         "content-type": "application/json",
     });
     public searchSuburbData = async (municipalityId: number, searchValue: string) => {
@@ -123,7 +123,6 @@ export default class SaLoadsheddingService {
             debugger;
             return fetch(getStatusRequest)
                 .then(x => {
-                    debugger;
                     return x.json()
                 })
                 .then(d => {
