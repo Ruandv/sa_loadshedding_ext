@@ -1,0 +1,23 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Check for DO NOT MERGE
+
+on:
+  pull_request:
+    branches: [ master ]
+    types: [labeled , unlabeled ]
+
+jobs:
+  fail-for-draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: list all labels
+        run: |
+          echo ${{ toJson(github.event.pull_request.labels.*.name) }}
+         
+      - name: Fail if PR says DO_NOT_MERGE
+        if: contains(github.event.pull_request.labels.*.name, 'do not merge')
+        run: |
+          echo " Does brnach contain do not merge?" ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') }}
+          exit 1
