@@ -36,7 +36,7 @@ export default class SaLoadsheddingService {
             const municipalityRequest = new Request(`${this.baseUrl}/GetSuburbList/?provinceId=${provinceId}&municipalityId=${municipality}`, {
                 method: 'Get',
                 mode: 'cors',
-                headers: this.myHeaders,
+                headers: MyHeaders.enableCors,
                 cache: 'default',
                 body: undefined
             })
@@ -57,7 +57,7 @@ export default class SaLoadsheddingService {
         const stageInfoRequest = new Request(`${this.baseUrl}/GetSchedule?blockId=${blockId}&days=${days}&stage=${stage}&municipalityId=${municipalityId}`, {
             method: 'Get',
             mode: 'cors',
-            headers: this.myHeaders,
+            headers: MyHeaders.enableCors,
             cache: 'default',
             body: undefined
         })
@@ -80,7 +80,7 @@ export default class SaLoadsheddingService {
             const municipalityListRequest = new Request(`${this.baseUrl}/GetMunicipalityList?provinceId=${provinceId}`, {
                 method: 'Get',
                 mode: 'cors',
-                headers: this.myHeaders,
+                headers: MyHeaders.enableCors,
                 cache: 'default',
                 body: undefined
             })
@@ -109,7 +109,7 @@ export default class SaLoadsheddingService {
             const getStatusRequest = new Request(`${this.baseUrl}/GetStatus`, {
                 method: 'Get',
                 mode: 'cors',
-                headers: this.myHeaders,
+                headers: MyHeaders.enableCors,
                 cache: 'default',
                 body: undefined
             })
