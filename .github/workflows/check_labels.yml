@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check for DO NOT MERGE label
-        if: contains(github.event.pull_request.labels.*.name, 'DO NOT MERGE') ||
+        if: contains(github.event.pull_request.labels.*.name, 'Do not merge') ||
             contains(github.event.pull_request.labels.*.name, 'o_not_merge')    
         run: |
           exit 1
