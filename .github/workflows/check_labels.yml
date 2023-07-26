@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: list all labels
-        run: echo github.event.pull_request.labels.*.name
-        
+        run: echo {github.event.pull_request.labels.*.name}
+
       - name: Fail if PR says DO_NOT_MERGE
         if: contains(github.event.pull_request.labels.*.name, 'merge') # Move the condition to here
         run: |
