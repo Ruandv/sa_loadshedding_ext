@@ -4,6 +4,8 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - eskom-calendar-api-za
 
 on:
+  label:
+    types: [created, deleted]
   pull_request:
     branches: [ $default-branch ]
 
