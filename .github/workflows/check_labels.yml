@@ -16,7 +16,7 @@ jobs:
       - name: list all labels
         run: |
           echo ${{ toJson(github.event.pull_request.labels.*.name) }}
-          echo ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') }}
+          echo ${{ contains(toJson(github.event.pull_request.labels.*.name), 'do not merge') }}
 
       - name: Fail if PR says DO_NOT_MERGE
         run: |
