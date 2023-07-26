@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: list all labels
         run: |
-          x=${{ toJson(github.event.pull_request.labels.*.name) }}
+          x= toJson(github.event.pull_request.labels.*.name)
           echo $x
 
       - name: Fail if PR says DO_NOT_MERGE
