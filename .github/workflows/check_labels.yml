@@ -19,6 +19,7 @@ jobs:
           echo ${{ contains(toJson(github.event.pull_request.labels.*.name), 'do not merge') }}
 
       - name: Fail if PR says DO_NOT_MERGE
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') == false }}
         run: |
           echo "Does brnach contain do not merge?" ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') }}
-          exit ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') == false ? 0 : 1 }}
+          exit 1
