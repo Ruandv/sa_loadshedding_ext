@@ -7,7 +7,7 @@ on:
   label:
     types: [created, deleted]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ master ]
 
 jobs:
   fail-for-draft:
@@ -16,5 +16,5 @@ jobs:
       - name: Fail if PR says DO_NOT_MERGE
         if: contains(github.event.pull_request.labels.*.name, 'merge') # Move the condition to here
         run: |
-          echo "This PR should not be merged."
+          echo "This PR should not be merged at this stage."
           exit 1
