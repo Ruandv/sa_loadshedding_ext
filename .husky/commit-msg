@@ -1,7 +1,6 @@
 #!/bin/sh
 if ! head -1 "$1" | grep -qE "^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+?\))?: .{1,}$"; then
-    echo -e "\e[31mchange my color\e[0m"
-    echo "\033[31mAborting commit. Your commit message is invalid.\033[0m" >&2
+    echo -e "\e[31mAborting commit. Your commit message is invalid.\e[0m" >&2
     exit 1
 fi
 
