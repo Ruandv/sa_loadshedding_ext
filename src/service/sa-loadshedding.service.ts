@@ -1,4 +1,5 @@
 import { Municipality, StageInfoModel } from "../interfaces/userDetails";
+import { MyHeaders } from "../shared/common.headers";
 import LoggingService from './logging.service';
 export default class SaLoadsheddingService {
 
@@ -8,19 +9,12 @@ export default class SaLoadsheddingService {
     private baseUrl = "https://sa-loadshedding-api.azurewebsites.net/api/Eskom";
     // private baseUrl = "https://localhost:44373/api/Eskom";
 
-    private myHeaders = new Headers({
-        'Access-Control-Allow-Origin': "*",
-        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-        'Token': 'f99e8c9e-372c-4699-9b63-e94d927788f2',
-        "content-type": "application/json",
-    });
     public searchSuburbData = async (municipalityId: number, searchValue: string) => {
         try {
             const municipalityRequest = new Request(`${this.baseUrl}/FindSuburb/?municipalityId=${municipalityId}&suburbname=${searchValue}`, {
                 method: 'Get',
                 mode: 'cors',
-                headers: this.myHeaders,
+                headers: MyHeaders.enableCors,
                 cache: 'default',
                 body: undefined
             })
@@ -110,7 +104,7 @@ export default class SaLoadsheddingService {
         }
     }
 
-    public getStatus = async(): Promise<number>=>{
+    public getStatus = async (): Promise<number> => {
         try {
             const getStatusRequest = new Request(`${this.baseUrl}/GetStatus`, {
                 method: 'Get',

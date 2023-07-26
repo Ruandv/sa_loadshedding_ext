@@ -1,3 +1,4 @@
+import { MyHeaders } from "../shared/common.headers";
 import LoggingService from "./logging.service";
 
 export default class EskomService {
@@ -6,19 +7,12 @@ export default class EskomService {
 
     private baseUrl = "https://loadshedding.eskom.co.za/LoadShedding";
 
-    private myHeaders = new Headers({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-        "content-type": "application/json",
-    });
-
     public getStatus = async (): Promise<any> => {
         try {
             const statusRequest = new Request(this.baseUrl + '/GetStatus', {
                 method: 'Get',
                 mode: 'cors',
-                headers: this.myHeaders,
+                headers: MyHeaders.enableCors,
                 cache: 'default',
                 body: undefined
             })

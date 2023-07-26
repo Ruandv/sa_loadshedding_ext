@@ -1,5 +1,6 @@
 import { MessageTypes } from "../enums/messageTypes";
 import { StorageKeys } from "../enums/storageKeys";
+import { MyHeaders } from "../shared/common.headers";
 import StorageService from "./storage.service";
 
 export default class LoggingService {
@@ -8,6 +9,7 @@ export default class LoggingService {
   private static appVersion: string;
   private static baseUrl = "https://sa-loadshedding-api.azurewebsites.net/api/Logging";
   //private static baseUrl = "https://localhost:44373/api/logging";
+
   public static getInstance() {
     if (!this.service) {
       this.service = new LoggingService();
@@ -55,12 +57,6 @@ export default class LoggingService {
       );
     }
   }
-  private myHeaders = new Headers({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-    "content-type": "application/json",
-  });
 
   public LogToServer(messageType: MessageTypes, msg: any) {
     try {
@@ -76,7 +72,7 @@ export default class LoggingService {
           const loggingRequest = new Request(`${LoggingService.baseUrl}`, {
             method: 'Post',
             mode: 'cors',
-            headers: this.myHeaders,
+            headers: MyHeaders.enableCors,
             cache: 'default',
             body: JSON.stringify(requestMessage)
           })
