@@ -1,6 +1,6 @@
 {
   "name": "Sa-Loadshedding-Ext",
-  "version": "2.0.25",
+  "version": "2.0.27",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
@@ -32,7 +32,7 @@
     "start": "react-scripts start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "package": "yarn version --patch && yarn build && yarn build && zip-build",
+    "package": "yarn version --patch --no-commit-hooks && yarn build && yarn build && zip-build",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
