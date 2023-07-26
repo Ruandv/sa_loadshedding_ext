@@ -1,0 +1,18 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - eskom-calendar-api-za
+
+on:
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  fail-for-draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if PR says DO_NOT_MERGE
+        if: contains(github.event.pull_request.labels.*.name, 'merge') # Move the condition to here
+        run: |
+          echo "This PR should not be merged."
+          exit 1
