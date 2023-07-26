@@ -6,7 +6,7 @@ name: Check for DO NOT MERGE
 on:
   pull_request:
     branches: [ master ]
-    types: [labeled , unlabeled ]
+    types: [labeled , unlabeled, synchronize,  ]
 
 jobs:
   fail-for-draft:
