@@ -99,11 +99,6 @@ function NewSuburb({
       loggingService.LogToServer(MessageTypes.SUBURBADDED, {
         suburbName: suburb.name,
       });
-      // provinceSelection.current = undefined;
-
-      // municipalitySelection.current = undefined;
-      // suburbSelection.current = undefined;
-
       onSuburbListChanged(c);
     }
     else {
