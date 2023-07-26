@@ -1,7 +1,8 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# This GitHub Action checks if a pull request targeting the master branch 
+# has one of the specified "DO NOT MERGE" labels, and if it does, 
+# it will block the merge by failing the action
 
-name: Check for DO NOT MERGE
+name: Check for DO NOT MERGE labels
 
 on:
   pull_request:
@@ -13,6 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check for DO NOT MERGE label
-        if: contains(github.event.pull_request.labels.*.name, 'Do NOT MERGE') || contains(github.event.pull_request.labels.*.name, 'Dont Merge')
+        if: github.event.pull_request.labels.*.name in ['Do NOT MERGE', 'Dont Merge']
         run: |
           exit 1
