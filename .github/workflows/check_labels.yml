@@ -9,7 +9,7 @@ on:
     branches: [ master ]
     # The action is triggered when a label is added (labeled), removed (unlabeled), 
     # or when the pull request is synchronized (synchronize).
-    types: [labeled , unlabeled, synchronize ] 
+    types: [labeled , unlabeled, synchronize, opened ] 
 
 jobs:
   fail-for-draft:
