@@ -7,13 +7,16 @@ name: Check for DO NOT MERGE labels
 on:
   pull_request:
     branches: [ master ]
-    types: [labeled , unlabeled, synchronize ]
+    # The action is triggered when a label is added (labeled), removed (unlabeled), or when the pull request is synchronized (synchronize).
+    types: [labeled , unlabeled, synchronize ] 
 
 jobs:
   fail-for-draft:
     runs-on: ubuntu-latest
     steps:
       - name: Check for DO NOT MERGE label
-        if: github.event.pull_request.labels.*.name in ['Do NOT MERGE', 'Dont Merge']
+        if: contains(github.event.pull_request.labels.*.name, 'DO NOT MERGE') ||
+            contains(github.event.pull_request.labels.*.name, 'Do not merge') ||
+            contains(github.event.pull_request.labels.*.name, 'o_not_merge')  
         run: |
           exit 1
