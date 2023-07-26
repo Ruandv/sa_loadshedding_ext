@@ -10,10 +10,10 @@ on:
     branches: [ master ]
 
 jobs:
-  fail-for-draft:
+  fail-for-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if PR says DO_NOT_MERGE
+      - name: Fail if PR says DO_NOT_MERGE {github.event.pull_request.labels.*.name}
         if: contains(github.event.pull_request.labels.*.name, 'merge') # Move the condition to here
         run: |
           echo "This PR should not be merged at this stage."
