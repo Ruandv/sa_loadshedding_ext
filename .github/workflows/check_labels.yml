@@ -4,10 +4,9 @@
 name: Check for DO NOT MERGE
 
 on:
-  label:
-    types: [created, deleted]
   pull_request:
     branches: [ master ]
+    types: [labeled , unlabeled ]
 
 jobs:
   fail-for-draft:
