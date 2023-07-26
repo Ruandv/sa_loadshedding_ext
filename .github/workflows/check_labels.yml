@@ -12,12 +12,7 @@ jobs:
   fail-for-draft:
     runs-on: ubuntu-latest
     steps:
-      - name: list all labels
-        run: |
-          echo ${{ toJson(github.event.pull_request.labels.*.name) }}
-         
       - name: Fail if PR says DO_NOT_MERGE
         if: contains(github.event.pull_request.labels.*.name, 'do not merge')
         run: |
-          echo " Does brnach contain do not msadferge?" ${{ contains(github.event.pull_request.labels.*.name, 'do not merge') }}
           exit 1
