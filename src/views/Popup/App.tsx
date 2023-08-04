@@ -10,6 +10,8 @@ import {
   Col,
   Container,
   Button,
+  Tooltip, 
+  OverlayTrigger
 } from "react-bootstrap";
 import { StorageKeys } from "../../enums/storageKeys";
 import { Suburb } from "../../interfaces/userDetails";
@@ -63,8 +65,6 @@ function App() {
         commitToData();
       }
     });
-
-
   }, []);
 
   useEffect(() => {
@@ -109,6 +109,13 @@ function App() {
     storageService.saveData(StorageKeys.showWhatsNew, false);
     setShowWhatsNew(false);
   }
+
+  const renderTooltip = (props:Suburb) => (
+    <Tooltip id="tab-tooltip">
+      Block {props.blockId}
+    </Tooltip>
+  );
+
   return (
     <div className={`App`} id={theme.selectedTheme}>
       <div
@@ -168,7 +175,8 @@ function App() {
                   </Card.Header>
                   <Card.Body>
                     <Card.Text><ul>
-                      <li>Stability changes</li>
+                      <li>Updated Areas</li>
+                      <li>Added tool tip to each tab to show the block number</li>
                     </ul></Card.Text>
                   </Card.Body>
                 </Card>
@@ -178,7 +186,11 @@ function App() {
 
               {suburbList?.map((x: Suburb) => {
                 return (
-                  <Tab eventKey={x.name} title={x.name}>
+                  <Tab eventKey={x.name} title={
+                    <OverlayTrigger placement="top" overlay={renderTooltip(x)}>
+                      <span>{x.name}</span>
+                    </OverlayTrigger>
+                  }>
                     {stage &&
                       <StageInfo
                         suburb={x}
