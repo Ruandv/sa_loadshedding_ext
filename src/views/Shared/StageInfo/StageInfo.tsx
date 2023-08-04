@@ -34,7 +34,7 @@ function StageInfo({
       } else {
         setLoading({ isLoading: false, message: "DONE!" });
       }
-    }, 2000);
+    }, 4000);
 
   useEffect(() => {
     clearTimeout(timerId);

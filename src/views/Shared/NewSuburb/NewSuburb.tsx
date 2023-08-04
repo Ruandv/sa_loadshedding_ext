@@ -51,7 +51,7 @@ function NewSuburb({
         isBusyProcessing!(msg);
         checkBack();
       }
-    }, 2000);
+    }, 4000);
     setTimerId(MytimerId);
   }
 
