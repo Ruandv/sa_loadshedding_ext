@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./StageInfo.scss";
 import { Row, Col, Card } from "react-bootstrap";
-import { StageInfoModel, Suburb } from "../../../interfaces/userDetails";
+import { JokeModel, StageInfoModel, Suburb } from "../../../interfaces/userDetails";
 import SaLoadsheddingService from "../../../service/sa-loadshedding.service";
+import JokesService from "../../../service/jokes.service";
 
 export interface StageInfoProps {
   suburb: Suburb;
@@ -16,9 +17,13 @@ function StageInfo({
   onIsBusyChanged: isBusyProcessing,
   days,
 }: StageInfoProps) {
+  console.log("Getting stage Data " + stage);
   const saLoadsheddingService = SaLoadsheddingService.getInstance();
+  const jokesService = JokesService.getInstance();
   const [scheduleData, setScheduleData] = useState<StageInfoModel[]>();
   const [loading, setLoading] = useState({});
+  const [joke, setJoke] = useState<JokeModel>({} as JokeModel);
+
   var doneYet = useRef(true);
   var timerId: any;
 
@@ -68,6 +73,9 @@ function StageInfo({
           message: `ERROR : ${error.message.toString()}`,
         });
       } finally {
+        if (stage <1) {
+          await GetJoke();
+        }
       }
     };
     getDataRes();
@@ -108,32 +116,49 @@ function StageInfo({
     return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
+  const GetJoke = async () => {
+    var res = await jokesService.getJoke()
+    setJoke(res);
+  }
+
   return (
     <>
       <div>
-        <Row xs={2} md={2} className="g-4">
-          {scheduleData?.map((x, idx, arr) => {
-            if (
-              idx === 0 ||
-              (idx > 0 && arr[idx - 1].dayOfMonth !== x.dayOfMonth)
-            ) {
-              return (
-                <Col>
-                  <Card>
-                    <Card.Header>
-                      {x.dayOfMonth.toString().substring(0, 10)}
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Text>{getInfo(arr, idx, stage)}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              );
-            } else {
-              return "";
-            }
-          })}
-        </Row>
+        {scheduleData && scheduleData.length === 0 ? <Col>
+          <Card>
+            <Card.Header>
+              {"No Loadshedding"}
+            </Card.Header>
+            <Card.Body>
+              <Card.Text><p>{joke.joke}</p><p>{joke.answer}</p></Card.Text>
+            </Card.Body>
+          </Card>
+        </Col> :
+          <Row xs={2} md={2} className="g-4">
+            {
+              scheduleData?.map((x, idx, arr) => {
+                if (
+                  idx === 0 ||
+                  (idx > 0 && arr[idx - 1].dayOfMonth !== x.dayOfMonth)
+                ) {
+                  return (
+                    <Col>
+                      <Card>
+                        <Card.Header>
+                          {x.dayOfMonth.toString().substring(0, 10)}
+                        </Card.Header>
+                        <Card.Body>
+                          <Card.Text>{getInfo(arr, idx, stage)}</Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  );
+                } else {
+                  return "";
+                }
+              })}
+          </Row>
+        }
       </div>
     </>
   );
