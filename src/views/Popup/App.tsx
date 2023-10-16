@@ -173,8 +173,7 @@ function App() {
                     </Card.Header>
                     <Card.Body>
                       <Card.Text><ul>
-                        <li>Updated Areas</li>
-                        <li>Added tool tip to each tab to show the block number</li>
+                        <li>Added a message when there is no loadshedding.</li>
                       </ul></Card.Text>
                     </Card.Body>
                   </Card>
