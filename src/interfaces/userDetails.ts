@@ -22,3 +22,9 @@ export interface StageInfoModel {
     start: string;
     end: string;
 }
+
+
+export interface JokeModel {
+    joke: string;
+    answer: string;
+}

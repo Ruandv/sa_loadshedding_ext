@@ -10,7 +10,7 @@ import {
   Col,
   Container,
   Button,
-  Tooltip, 
+  Tooltip,
   OverlayTrigger
 } from "react-bootstrap";
 import { StorageKeys } from "../../enums/storageKeys";
@@ -26,7 +26,7 @@ import SaLoadsheddingService from "../../service/sa-loadshedding.service";
 
 function App() {
   const [suburbList, setSuburbList] = useState<Array<Suburb>>([]);
-  const [stage, setStage] = useState<number>();
+  const [stage, setStage] = useState<number>(0);
   const [message, setMessage] = useState("Please wait...");
   const [lastSelectedTab, setLastSelectedTab] = useState<string>();
   const [processing, setProcessing] = useState<boolean>(false);
@@ -38,7 +38,7 @@ function App() {
   const theme = useContext(ThemeContext);
   var commitToData = async () => {
     var subList = await storageService
-      .getData(StorageKeys.suburbList,[]);
+      .getData(StorageKeys.suburbList, []);
     setSuburbList(subList);
 
     var lastSelectedKey = await storageService.getData(StorageKeys.lastSelectedTab);
@@ -47,20 +47,19 @@ function App() {
     var defaultDaysToShow = await storageService.getData(StorageKeys.defaultDays);
     days.current = defaultDaysToShow;
   };
-  var getDataFromServer = async()=>{
+  var getDataFromServer = async () => {
     var serverStage = await saLoadsheddingService.getStatus()
-    storageService.saveData(StorageKeys.currentStage,serverStage);
+    storageService.saveData(StorageKeys.currentStage, serverStage);
     setStage(serverStage)
     commitToData();
   }
 
   useEffect(() => {
     storageService.getData(StorageKeys.currentStage).then(level => {
-      if(level === "NaN"){
+      if (level === "NaN") {
         getDataFromServer()
       }
-      else
-      {
+      else {
         setStage(level);
         commitToData();
       }
@@ -70,7 +69,6 @@ function App() {
   useEffect(() => {
     setSuburbList([]);
     commitToData();
-
   }, [stage]);
 
   const setKey = (x: any) => {
@@ -110,7 +108,7 @@ function App() {
     setShowWhatsNew(false);
   }
 
-  const renderTooltip = (props:Suburb) => (
+  const renderTooltip = (props: Suburb) => (
     <Tooltip id="tab-tooltip">
       Block {props.blockId}
     </Tooltip>
@@ -129,17 +127,17 @@ function App() {
           <Col>
             <InputGroup className="mb-3">
               <Dropdown
-                onSelect={(e) => (e !== null ? setStage(parseInt(e)) : "")}
+                onSelect={(e) => (e !== null ? setStage(parseInt(e)) :setStage(0))}
               >
                 <Dropdown.Toggle variant={getVariant()} id="dropdown-basic">
                   Stage {stage}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  {Array.from({ length: 8 }).map((_, idx) => {
+                  {Array.from({ length: 9 }).map((_, idx) => {
                     return (
-                      <Dropdown.Item eventKey={idx + 1}>
-                        {idx + 1}
+                      <Dropdown.Item eventKey={idx}>
+                        {idx}
                       </Dropdown.Item>
                     );
                   })}
@@ -169,41 +167,36 @@ function App() {
             >
               {(showWhatsNew === true || showWhatsNew === undefined) ? <Tab eventKey={'whatsNew'} title="What's new!!">
                 <p>
-                <Card>
-                  <Card.Header>
-                    WHAT IS NEW
-                  </Card.Header>
-                  <Card.Body>
-                    <Card.Text><ul>
-                      <li>Updated Areas</li>
-                      <li>Added tool tip to each tab to show the block number</li>
-                    </ul></Card.Text>
-                  </Card.Body>
-                </Card>
+                  <Card>
+                    <Card.Header>
+                      WHAT IS NEW
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Text><ul>
+                        <li>Added a joke when there is no loadshedding.</li>
+                        <li><a target="blank" href="https://www.news24.com/fin24/economy/city-power-takes-control-of-load-shedding-joburg-schedules-blocks-to-change-20231030">Planned COJ block changes</a></li>
+                      </ul></Card.Text>
+                    </Card.Body>
+                  </Card>
                 </p>
-                  <Button onClick={closeWhatsNew}>Close</Button>
+                <Button onClick={closeWhatsNew}>Close</Button>
               </Tab> : ''}
 
-              {suburbList?.map((x: Suburb) => {
-                return (
-                  <Tab eventKey={x.name} title={
-                    <OverlayTrigger placement="top" overlay={renderTooltip(x)}>
-                      <span>{x.name}</span>
-                    </OverlayTrigger>
-                  }>
-                    {stage &&
-                      <StageInfo
-                        suburb={x}
-                        stage={stage ? stage : 6}
-                        onIsBusyChanged={(data) => {
-                          setMessage(data.message);
-                          setProcessing(data.isLoading);
-                        }}
-                        days={days.current}
-                      ></StageInfo>}
-                  </Tab>
-                );
-              })}
+              {suburbList?.map((x: Suburb) => (
+                <Tab eventKey={x.name} title={<OverlayTrigger placement="top" overlay={renderTooltip(x)}>
+                  <span>{x.name}</span>
+                </OverlayTrigger>}>
+                  {<StageInfo
+                    suburb={x}
+                    stage={stage}
+                    onIsBusyChanged={(data) => {
+                      setMessage(data.message);
+                      setProcessing(data.isLoading);
+                    }}
+                    days={days.current}
+                  ></StageInfo>}
+                </Tab>
+              ))}
               <Tab eventKey={"newSub"} title={chrome.i18n.getMessage('mySetting')}>
                 <NewSuburb
                   suburbList={suburbList!}
