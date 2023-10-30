@@ -173,7 +173,8 @@ function App() {
                     </Card.Header>
                     <Card.Body>
                       <Card.Text><ul>
-                        <li>Added a message when there is no loadshedding.</li>
+                        <li>Added a joke when there is no loadshedding.</li>
+                        <li><a target="blank" href="https://www.news24.com/fin24/economy/city-power-takes-control-of-load-shedding-joburg-schedules-blocks-to-change-20231030">Planned COJ block changes</a></li>
                       </ul></Card.Text>
                     </Card.Body>
                   </Card>
