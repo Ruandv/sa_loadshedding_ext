@@ -127,7 +127,7 @@ function App() {
           <Col>
             <InputGroup className="mb-3">
               <Dropdown
-                onSelect={(e) => (e !== null ? setStage(parseInt(e)) :setStage(0))}
+                onSelect={(e) => (e !== null ? setStage(parseInt(e)) : setStage(0))}
               >
                 <Dropdown.Toggle variant={getVariant()} id="dropdown-basic">
                   Stage {stage}
@@ -172,10 +172,13 @@ function App() {
                       WHAT IS NEW
                     </Card.Header>
                     <Card.Body>
-                      <Card.Text><ul>
-                        <li>Added a joke when there is no loadshedding.</li>
-                        <li><a target="blank" href="https://www.news24.com/fin24/economy/city-power-takes-control-of-load-shedding-joburg-schedules-blocks-to-change-20231030">Planned COJ block changes</a></li>
-                      </ul></Card.Text>
+                      <Card.Text>
+                        <ul>
+                          <li className="critical">PLEASE REMOVE AND RE-ADD YOUR COJ SUBURBS</li>
+                          <li>Updated to the new COJ suburb list and schedule</li>
+                          <li><a target="blank" href="https://www.news24.com/fin24/economy/city-power-takes-control-of-load-shedding-joburg-schedules-blocks-to-change-20231030">Planned COJ block changes</a></li>
+                        </ul>
+                      </Card.Text>
                     </Card.Body>
                   </Card>
                 </p>
