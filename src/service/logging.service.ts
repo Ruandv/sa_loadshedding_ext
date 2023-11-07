@@ -76,7 +76,10 @@ export default class LoggingService {
             cache: 'default',
             body: JSON.stringify(requestMessage)
           })
-          return fetch(loggingRequest);
+          return fetch(loggingRequest).then(async (res) => {
+            var val = await res.text();
+            return (parseInt(val) - 1).toString();
+        });
         } catch (ex) {
           LoggingService.service.echo("Fetch Error", (ex as any).message, null, "error")
           throw ex;
